@@ -6,15 +6,20 @@ html,
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  height: 100%;
   background: #05070d;
   color: #f4f6fb;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-#root {
+/* Only the kiosk display page suppresses scrolling — the admin panel needs
+   to scroll normally since its forms can be taller than the viewport. */
+body.kiosk {
+  overflow: hidden;
   height: 100%;
+}
+
+#root {
+  min-height: 100%;
 }
 
 a {
