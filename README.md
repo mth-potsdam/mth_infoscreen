@@ -36,6 +36,16 @@ This runs the backend on `http://localhost:3001` and the frontend (with
 openssl rand -hex 32
 ```
 
+### Testing the production image with docker-compose
+
+`docker compose up` runs the real production image locally over plain HTTP.
+The admin session cookie is marked `Secure` whenever `NODE_ENV=production`
+(matching how it behaves in the real Coolify deployment, which sits behind
+HTTPS) — browsers and `curl` correctly refuse to store a `Secure` cookie set
+over plain HTTP, so logging into `/admin` won't work at `http://localhost:3000`
+in this mode. That's expected, not a bug: it works over HTTPS in production.
+Use `npm run dev` instead to exercise the admin login flow locally.
+
 ## Setting up the Microsoft 365 connection
 
 The events panel reads a Microsoft List via the Graph API using an **app-only
