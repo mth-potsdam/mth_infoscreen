@@ -102,14 +102,16 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
    Add that public key at
    `github.com/mth-potsdam/mth_infoscreen/settings/keys` → **Add deploy
    key** (leave "Allow write access" unchecked — pulls only need read
-   access). Then point SSH at it and clone:
+   access). Then point SSH at it — a single `printf` line, not a heredoc,
+   since heredocs pasted into some SSH terminal apps can fail to terminate
+   cleanly and corrupt the file:
    ```bash
-   cat >> ~/.ssh/config <<'EOF'
-   Host github.com
-     IdentityFile ~/.ssh/mth_infoscreen_deploy
-     IdentitiesOnly yes
-   EOF
+   printf 'Host github.com\n  IdentityFile ~/.ssh/mth_infoscreen_deploy\n  IdentitiesOnly yes\n' > ~/.ssh/config
    chmod 600 ~/.ssh/config
+   cat ~/.ssh/config   # sanity check before continuing
+   ```
+   Then clone, as a separate command:
+   ```bash
    cd /volume1/docker   # or wherever you keep app folders
    git clone git@github.com:mth-potsdam/mth_infoscreen.git
    ```
