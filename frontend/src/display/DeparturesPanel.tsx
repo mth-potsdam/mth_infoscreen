@@ -26,6 +26,16 @@ export default function DeparturesPanel() {
           />
         ))}
       </div>
+      <p className="panel__attribution">
+        Transit data:{' '}
+        <a href="https://transitous.org/sources/" target="_blank" rel="noreferrer">
+          transitous.org
+        </a>
+        , ©{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+          OpenStreetMap contributors
+        </a>
+      </p>
     </section>
   );
 }

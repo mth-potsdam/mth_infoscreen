@@ -103,6 +103,16 @@ export default function LocationStopsPage() {
       {saveLocation.isSuccess && <p className="admin-success">Location saved.</p>}
 
       <h1>Nearby Stops</h1>
+      <p className="admin-attribution">
+        Stop data:{' '}
+        <a href="https://transitous.org/sources/" target="_blank" rel="noreferrer">
+          transitous.org
+        </a>
+        , ©{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+          OpenStreetMap contributors
+        </a>
+      </p>
       {nearbyStopsQuery.isLoading && <p>Loading nearby stops…</p>}
       {nearbyStopsQuery.isError && (
         <p className="admin-error">

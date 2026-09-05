@@ -110,6 +110,11 @@ button:disabled {
   color: #1f9d55;
 }
 
+.admin-attribution {
+  font-size: 0.8rem;
+  color: #888;
+}
+
 .admin-stop-list,
 .admin-pick-list {
   list-style: none;

@@ -1,7 +1,7 @@
 import { Departure, DeparturesResponse } from '../../../shared/types';
 import { getConfig } from '../config/configStore';
 import { log } from '../lib/log';
-import { fetchDepartures } from './dbTransportClient';
+import { fetchDepartures } from './transitousClient';
 
 interface StopCacheEntry {
   stopId: string;

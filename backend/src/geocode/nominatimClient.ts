@@ -7,9 +7,9 @@ export interface GeocodeResult {
 }
 
 export async function geocodeAddress(address: string): Promise<GeocodeResult | null> {
-  const userAgent = process.env.NOMINATIM_USER_AGENT;
+  const userAgent = process.env.APP_USER_AGENT;
   if (!userAgent) {
-    throw new Error('NOMINATIM_USER_AGENT environment variable is required');
+    throw new Error('APP_USER_AGENT environment variable is required');
   }
   const url = new URL('https://nominatim.openstreetmap.org/search');
   url.searchParams.set('q', address);

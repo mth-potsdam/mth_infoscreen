@@ -60,6 +60,17 @@
   font-size: clamp(1rem, 1.4vw, 1.4rem);
 }
 
+.panel__attribution {
+  margin: clamp(6px, 1vh, 12px) 0 0;
+  font-size: 0.65rem;
+  color: #4a5170;
+  text-align: right;
+}
+
+.panel__attribution a {
+  color: inherit;
+}
+
 .departure-row {
   display: grid;
   grid-template-columns: clamp(3.5rem, 6vw, 5.5rem) 1fr auto;

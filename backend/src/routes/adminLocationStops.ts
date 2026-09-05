@@ -3,7 +3,7 @@ import { requireAdmin } from '../auth/authMiddleware';
 import { getConfig, updateConfig } from '../config/configStore';
 import { geocodeAddress } from '../geocode/nominatimClient';
 import { asyncHandler } from '../lib/asyncHandler';
-import { findNearbyStops } from '../transit/dbTransportClient';
+import { findNearbyStops } from '../transit/transitousClient';
 
 const router = Router();
 router.use(requireAdmin);
@@ -53,9 +53,8 @@ router.get(
       res.status(400).json({ error: 'Set the facility location first' });
       return;
     }
-    const results = Number(req.query.results ?? 10);
-    const distance = Number(req.query.distance ?? 1000);
-    const stops = await findNearbyStops(facility.lat, facility.lon, results, distance);
+    const results = Number(req.query.results ?? 15);
+    const stops = await findNearbyStops(facility.lat, facility.lon, results);
     res.json(stops);
   })
 );

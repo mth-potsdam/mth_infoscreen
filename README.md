@@ -24,7 +24,7 @@ Requires Node 22+.
 
 ```bash
 npm run install:all
-cp .env.example .env   # fill in ADMIN_PASSWORD, APP_SECRET, NOMINATIM_USER_AGENT
+cp .env.example .env   # fill in ADMIN_PASSWORD, APP_SECRET, APP_USER_AGENT
 npm run dev
 ```
 
@@ -79,10 +79,26 @@ infoscreen itself. A tenant admin needs to do this once:
 
 ## Public transport data
 
-Departures come from the free, keyless
-[v6.db.transport.rest](https://v6.db.transport.rest) API, which aggregates
-Deutsche Bahn's HAFAS data (covers long-distance, regional, and local
-transit including buses and trams). No API key or account is needed.
+Departures and nearby-stop lookups come from
+[transitous.org](https://transitous.org), a free, keyless, community-run
+routing API (MOTIS) covering long-distance, regional, and local transit —
+including buses and trams — via open GTFS feeds. No API key or account is
+needed, but its [usage policy](https://transitous.org/api/) requires:
+
+- **A descriptive `User-Agent`** on every request — set via `APP_USER_AGENT`
+  (also reused for Nominatim's geocoding calls).
+- **The project to be open-source, non-commercial, and light on resources**
+  — this repo is public specifically to satisfy that; if you fork this for
+  a commercial deployment, use the official Deutsche Bahn API or a
+  self-hosted MOTIS instance instead.
+- **Attribution** — the app credits transitous.org and OpenStreetMap
+  contributors directly on the display and in the admin panel; don't remove
+  those links.
+
+We previously used the unofficial `v6.db.transport.rest` (HAFAS-wrapper)
+API, but its own maintainers now warn it's "subject to haphazard blocking"
+and recommend transitous.org as the replacement — which matched our own
+experience running it in production.
 
 ## Deploying on a Synology NAS
 
@@ -122,7 +138,7 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
 3. **Create the env file.** In that same folder (via SSH — replace the
    password and contact email first):
    ```bash
-   printf 'ADMIN_PASSWORD=choose-a-strong-password\nAPP_SECRET=%s\nNOMINATIM_USER_AGENT=mth-infoscreen (you@example.com)\n' "$(openssl rand -hex 32)" > .env
+   printf 'ADMIN_PASSWORD=choose-a-strong-password\nAPP_SECRET=%s\nAPP_USER_AGENT=mth-infoscreen (you@example.com)\n' "$(openssl rand -hex 32)" > .env
    chmod 600 .env
    cat .env   # sanity check
    ```

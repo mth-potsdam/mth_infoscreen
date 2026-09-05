@@ -88,7 +88,7 @@ export function useSaveLocation() {
 export function useNearbyStops(enabled: boolean) {
   return useQuery({
     queryKey: ['admin', 'nearby-stops'],
-    queryFn: () => api.get<NearbyStop[]>('/admin/stops/nearby?results=15&distance=1500'),
+    queryFn: () => api.get<NearbyStop[]>('/admin/stops/nearby?results=15'),
     enabled,
   });
 }

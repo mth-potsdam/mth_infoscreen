@@ -7,7 +7,6 @@ export interface Stop {
 
 export interface NearbyStop extends Stop {
   distanceMeters: number;
-  products: string[];
 }
 
 export interface Departure {
