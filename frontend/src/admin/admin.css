@@ -1,0 +1,183 @@
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f6fa;
+  color: #1a1d29;
+}
+
+.admin-nav {
+  width: 220px;
+  background: #1a1d29;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 8px;
+}
+
+.admin-nav__title {
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.admin-nav a {
+  color: #c7ccdb;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.admin-nav a.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.admin-nav__logout {
+  margin-top: auto;
+  background: none;
+  border: 1px solid #444;
+  color: #c7ccdb;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 32px 40px;
+  max-width: 720px;
+}
+
+.admin-page h1 {
+  font-size: 1.4rem;
+  margin-top: 0;
+}
+
+.admin-page h2 {
+  font-size: 1.1rem;
+  margin-top: 32px;
+}
+
+.admin-page label {
+  display: block;
+  margin: 12px 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.admin-page input,
+.admin-page select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.admin-field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-field-row input {
+  width: auto;
+  flex: 1;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #2f5fdb;
+  background: #2f5fdb;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-error {
+  color: #c0392b;
+}
+
+.admin-success {
+  color: #1f9d55;
+}
+
+.admin-stop-list,
+.admin-pick-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.admin-stop-list li,
+.admin-pick-list li {
+  border-bottom: 1px solid #eee;
+}
+
+.admin-stop-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 0;
+}
+
+.admin-stop-distance {
+  margin-left: auto;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.admin-pick-list button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #1a1d29;
+  padding: 8px 12px;
+}
+
+.admin-pick--active {
+  background: #e8edff !important;
+  font-weight: 600;
+}
+
+.admin-mapping {
+  margin-top: 16px;
+}
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1d29;
+}
+
+.admin-login__form {
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-loading {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}

@@ -1,0 +1,105 @@
+import { Router } from 'express';
+import { requireAdmin } from '../auth/authMiddleware';
+import { getConfig, updateConfig } from '../config/configStore';
+import { geocodeAddress } from '../geocode/nominatimClient';
+import { asyncHandler } from '../lib/asyncHandler';
+import { findNearbyStops } from '../transit/dbTransportClient';
+
+const router = Router();
+router.use(requireAdmin);
+
+router.post(
+  '/admin/geocode',
+  asyncHandler(async (req, res) => {
+    const { address } = req.body as { address?: string };
+    if (!address) {
+      res.status(400).json({ error: 'Address is required' });
+      return;
+    }
+    const result = await geocodeAddress(address);
+    if (!result) {
+      res.status(404).json({ error: 'Address not found' });
+      return;
+    }
+    res.json(result);
+  })
+);
+
+router.get('/admin/location', (_req, res) => {
+  res.json(getConfig().facility);
+});
+
+router.put(
+  '/admin/location',
+  asyncHandler(async (req, res) => {
+    const { lat, lon, address } = req.body as { lat?: number; lon?: number; address?: string };
+    if (typeof lat !== 'number' || typeof lon !== 'number') {
+      res.status(400).json({ error: 'lat and lon are required numbers' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.facility = { lat, lon, address: address ?? cfg.facility.address };
+      return cfg;
+    });
+    res.json(next.facility);
+  })
+);
+
+router.get(
+  '/admin/stops/nearby',
+  asyncHandler(async (req, res) => {
+    const { facility } = getConfig();
+    if (facility.lat === null || facility.lon === null) {
+      res.status(400).json({ error: 'Set the facility location first' });
+      return;
+    }
+    const results = Number(req.query.results ?? 10);
+    const distance = Number(req.query.distance ?? 1000);
+    const stops = await findNearbyStops(facility.lat, facility.lon, results, distance);
+    res.json(stops);
+  })
+);
+
+router.get('/admin/stops/selected', (_req, res) => {
+  res.json(getConfig().transit.selectedStops);
+});
+
+router.put(
+  '/admin/stops/selected',
+  asyncHandler(async (req, res) => {
+    const { stops } = req.body as {
+      stops?: Array<{ id: string; name: string; lat: number; lon: number }>;
+    };
+    if (!Array.isArray(stops)) {
+      res.status(400).json({ error: 'stops must be an array' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.transit.selectedStops = stops;
+      return cfg;
+    });
+    res.json(next.transit.selectedStops);
+  })
+);
+
+router.get('/admin/settings/departures-interval', (_req, res) => {
+  res.json({ refreshIntervalSeconds: getConfig().transit.refreshIntervalSeconds });
+});
+
+router.put(
+  '/admin/settings/departures-interval',
+  asyncHandler(async (req, res) => {
+    const { seconds } = req.body as { seconds?: number };
+    if (!Number.isInteger(seconds) || (seconds as number) < 10) {
+      res.status(400).json({ error: 'seconds must be an integer >= 10' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.transit.refreshIntervalSeconds = seconds as number;
+      return cfg;
+    });
+    res.json({ refreshIntervalSeconds: next.transit.refreshIntervalSeconds });
+  })
+);
+
+export default router;

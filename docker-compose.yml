@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - TZ=Europe/Berlin
+      - CONFIG_DIR=/data
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - APP_SECRET=${APP_SECRET}
+      - NOMINATIM_USER_AGENT=${NOMINATIM_USER_AGENT}
+      - DEPARTURES_API_BASE=${DEPARTURES_API_BASE:-https://v6.db.transport.rest}
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
