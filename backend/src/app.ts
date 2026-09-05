@@ -31,7 +31,10 @@ export function createApp(): Express {
 
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     log.error('Unhandled route error', err);
-    res.status(500).json({ error: 'Internal server error' });
+    // This is an internal, LAN-only admin tool with no untrusted callers,
+    // so surfacing the real (non-stack-trace) error message is worth more
+    // for diagnosing upstream API failures than hiding it would protect.
+    res.status(500).json({ error: err.message || 'Internal server error' });
   });
 
   return app;
