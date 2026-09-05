@@ -53,8 +53,8 @@ router.get(
       res.status(400).json({ error: 'Set the facility location first' });
       return;
     }
-    const results = Number(req.query.results ?? 15);
-    const stops = await findNearbyStops(facility.lat, facility.lon, results);
+    const radius = Number(req.query.radius ?? 1000);
+    const stops = await findNearbyStops(facility.lat, facility.lon, radius);
     res.json(stops);
   })
 );

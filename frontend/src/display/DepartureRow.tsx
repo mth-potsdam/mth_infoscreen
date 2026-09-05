@@ -2,7 +2,12 @@ import type { Departure } from '../../../shared/types';
 
 function formatTime(iso: string | null): string {
   if (!iso) return '--:--';
-  return new Date(iso).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  // Always render in the facility's own timezone — see EventRow.tsx.
+  return new Date(iso).toLocaleTimeString('de-DE', {
+    timeZone: 'Europe/Berlin',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 export default function DepartureRow({ departure }: { departure: Departure }) {

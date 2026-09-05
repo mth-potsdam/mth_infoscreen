@@ -17,15 +17,27 @@ export default function LocationStopsPage() {
     displayName: string;
   } | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [radiusDisplay, setRadiusDisplay] = useState(1000);
+  const [radiusMeters, setRadiusMeters] = useState(1000);
 
   const facilityQuery = useFacilityLocation();
   const geocode = useGeocode();
   const saveLocation = useSaveLocation();
   const selectedStopsQuery = useSelectedStops();
   const nearbyStopsQuery = useNearbyStops(
-    Boolean(facilityQuery.data?.lat) || saveLocation.isSuccess
+    Boolean(facilityQuery.data?.lat) || saveLocation.isSuccess,
+    radiusMeters
   );
   const saveSelectedStops = useSaveSelectedStops();
+
+  function commitRadius(value: number) {
+    setRadiusDisplay(value);
+    setRadiusMeters(value);
+  }
+
+  function formatRadius(meters: number): string {
+    return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${meters} m`;
+  }
 
   useEffect(() => {
     if (facilityQuery.data && facilityQuery.data.lat !== null && facilityQuery.data.lon !== null) {
@@ -113,6 +125,20 @@ export default function LocationStopsPage() {
           OpenStreetMap contributors
         </a>
       </p>
+      <label>
+        Search radius: {formatRadius(radiusDisplay)}
+        <input
+          type="range"
+          min={200}
+          max={5000}
+          step={100}
+          value={radiusDisplay}
+          onChange={(e) => setRadiusDisplay(Number(e.target.value))}
+          onMouseUp={(e) => commitRadius(Number(e.currentTarget.value))}
+          onTouchEnd={(e) => commitRadius(Number(e.currentTarget.value))}
+          onKeyUp={(e) => commitRadius(Number(e.currentTarget.value))}
+        />
+      </label>
       {nearbyStopsQuery.isLoading && <p>Loading nearby stops…</p>}
       {nearbyStopsQuery.isError && (
         <p className="admin-error">

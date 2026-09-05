@@ -85,10 +85,10 @@ export function useSaveLocation() {
   });
 }
 
-export function useNearbyStops(enabled: boolean) {
+export function useNearbyStops(enabled: boolean, radiusMeters: number) {
   return useQuery({
-    queryKey: ['admin', 'nearby-stops'],
-    queryFn: () => api.get<NearbyStop[]>('/admin/stops/nearby?results=15'),
+    queryKey: ['admin', 'nearby-stops', radiusMeters],
+    queryFn: () => api.get<NearbyStop[]>(`/admin/stops/nearby?radius=${radiusMeters}`),
     enabled,
   });
 }

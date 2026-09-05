@@ -76,6 +76,11 @@
   font-size: 0.95rem;
 }
 
+.admin-page input[type='range'] {
+  padding: 0;
+  border: none;
+}
+
 .admin-field-row {
   display: flex;
   align-items: center;

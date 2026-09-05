@@ -24,39 +24,73 @@ function distanceMeters(lat1: number, lon1: number, lat2: number, lon2: number):
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-interface Match {
-  type: 'ADDRESS' | 'PLACE' | 'STOP';
+interface MapStopsPlace {
   name: string;
-  id: string;
+  stopId?: string;
   lat: number;
   lon: number;
+}
+
+const METERS_PER_DEGREE_LAT = 111_320;
+const MAX_RESULTS = 200;
+
+// The map/stops endpoint's `min`/`max` params are, confusingly, the
+// lower-right and upper-left corners respectively (not the more common
+// lower-left/upper-right convention).
+function boundingBox(lat: number, lon: number, radiusMeters: number): { min: string; max: string } {
+  const latDelta = radiusMeters / METERS_PER_DEGREE_LAT;
+  const lonDelta = radiusMeters / (METERS_PER_DEGREE_LAT * Math.cos((lat * Math.PI) / 180));
+  const south = lat - latDelta;
+  const north = lat + latDelta;
+  const west = lon - lonDelta;
+  const east = lon + lonDelta;
+  return { min: `${south},${east}`, max: `${north},${west}` };
+}
+
+// Multiple GTFS feeds (VBB, DELFI, long-distance coach operators, ...) often
+// publish the same physical stop under slightly different IDs. Collapse
+// entries with the same name within ~10m of each other, keeping the closest.
+function dedupeStops(stops: NearbyStop[]): NearbyStop[] {
+  const seen = new Set<string>();
+  const result: NearbyStop[] = [];
+  for (const stop of stops) {
+    const key = `${stop.name}|${Math.round(stop.lat * 10_000)}|${Math.round(stop.lon * 10_000)}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(stop);
+    }
+  }
+  return result;
 }
 
 export async function findNearbyStops(
   lat: number,
   lon: number,
-  numResults = 15
+  radiusMeters: number
 ): Promise<NearbyStop[]> {
-  const url = new URL(`${BASE_URL}/api/v1/reverse-geocode`);
-  url.searchParams.set('place', `${lat},${lon}`);
-  url.searchParams.set('type', 'STOP');
-  url.searchParams.set('numResults', String(numResults));
+  const { min, max } = boundingBox(lat, lon, radiusMeters);
+  const url = new URL(`${BASE_URL}/api/v6/map/stops`);
+  url.searchParams.set('min', min);
+  url.searchParams.set('max', max);
 
   const res = await fetchWithTimeout(url.toString(), { headers: userAgentHeaders() });
   if (!res.ok) {
     throw new Error(`Nearby stops lookup failed: ${res.status} ${res.statusText}`);
   }
-  const matches = (await res.json()) as Match[];
-  return matches
-    .filter((match) => match.type === 'STOP')
-    .map((match) => ({
-      id: match.id,
-      name: match.name,
-      lat: match.lat,
-      lon: match.lon,
-      distanceMeters: Math.round(distanceMeters(lat, lon, match.lat, match.lon)),
+  const places = (await res.json()) as MapStopsPlace[];
+  const withDistance = places
+    .filter((place) => place.stopId)
+    .map((place) => ({
+      id: place.stopId as string,
+      name: place.name,
+      lat: place.lat,
+      lon: place.lon,
+      distanceMeters: Math.round(distanceMeters(lat, lon, place.lat, place.lon)),
     }))
+    .filter((stop) => stop.distanceMeters <= radiusMeters)
     .sort((a, b) => a.distanceMeters - b.distanceMeters);
+
+  return dedupeStops(withDistance).slice(0, MAX_RESULTS);
 }
 
 interface Place {
