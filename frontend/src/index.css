@@ -11,7 +11,6 @@
   --mth-off-white: #f3f3ef;
   --mth-off-white-rgb: 243, 243, 239;
   --mth-coral: #fe5f5b;
-  --mth-kiosk-bg: #03100f;
 }
 
 * {
@@ -22,8 +21,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--mth-kiosk-bg);
-  color: var(--mth-off-white);
+  background: var(--mth-off-white);
+  color: var(--mth-text-primary);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 

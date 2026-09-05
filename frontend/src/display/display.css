@@ -11,13 +11,11 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: rgba(var(--mth-off-white-rgb), 0.04);
-  border-radius: 16px;
   padding: clamp(16px, 2vw, 32px);
 }
 
 .panel--departures {
-  border-right: 1px solid rgba(var(--mth-off-white-rgb), 0.1);
+  border-right: 1px solid var(--mth-structure-gray);
 }
 
 .panel__header {
@@ -31,12 +29,12 @@
   font-size: clamp(1.5rem, 2.4vw, 2.6rem);
   margin: 0;
   font-weight: 600;
-  color: var(--mth-green-light);
+  color: var(--mth-green-dark);
 }
 
 .stale-badge {
   font-size: clamp(0.8rem, 1vw, 1.1rem);
-  color: var(--mth-sage);
+  color: var(--mth-text-secondary);
 }
 
 .stale-badge--stale {
@@ -44,7 +42,7 @@
 }
 
 .stale-badge--loading {
-  color: rgba(var(--mth-off-white-rgb), 0.4);
+  color: var(--mth-text-secondary);
 }
 
 .panel__body {
@@ -57,14 +55,14 @@
 }
 
 .panel__empty {
-  color: rgba(var(--mth-off-white-rgb), 0.4);
+  color: var(--mth-text-secondary);
   font-size: clamp(1rem, 1.4vw, 1.4rem);
 }
 
 .panel__attribution {
   margin: clamp(6px, 1vh, 12px) 0 0;
   font-size: 0.65rem;
-  color: rgba(var(--mth-off-white-rgb), 0.3);
+  color: var(--mth-text-secondary);
   text-align: right;
 }
 
@@ -79,7 +77,7 @@
   align-items: center;
   font-size: clamp(1.1rem, 1.7vw, 1.8rem);
   padding: clamp(6px, 0.8vh, 12px) 0;
-  border-bottom: 1px solid rgba(var(--mth-off-white-rgb), 0.08);
+  border-bottom: 1px solid rgba(183, 183, 176, 0.4);
 }
 
 .departure-row--cancelled {
@@ -89,8 +87,8 @@
 
 .departure-row__line {
   font-weight: 700;
-  color: var(--mth-green-light);
-  background: rgba(var(--mth-green-light-rgb), 0.18);
+  color: var(--mth-green-dark);
+  background: rgba(var(--mth-green-light-rgb), 0.2);
   border-radius: 8px;
   padding: 2px 10px;
   text-align: center;
@@ -98,7 +96,7 @@
 
 .departure-row__stop {
   display: block;
-  color: var(--mth-sage);
+  color: var(--mth-text-secondary);
   font-size: 0.6em;
 }
 
@@ -118,13 +116,13 @@
   display: flex;
   gap: clamp(12px, 1.6vw, 24px);
   padding: clamp(8px, 1vh, 16px) 0;
-  border-bottom: 1px solid rgba(var(--mth-off-white-rgb), 0.08);
+  border-bottom: 1px solid rgba(183, 183, 176, 0.4);
   font-size: clamp(1rem, 1.5vw, 1.6rem);
 }
 
 .event-row__time {
   flex: 0 0 auto;
-  color: var(--mth-sage);
+  color: var(--mth-text-secondary);
   font-variant-numeric: tabular-nums;
   min-width: clamp(7rem, 10vw, 11rem);
 }
@@ -134,7 +132,7 @@
 }
 
 .event-row__location {
-  color: var(--mth-sage);
+  color: var(--mth-text-secondary);
   font-size: 0.75em;
 }
 
@@ -145,6 +143,6 @@
   }
   .panel--departures {
     border-right: none;
-    border-bottom: 1px solid rgba(var(--mth-off-white-rgb), 0.1);
+    border-bottom: 1px solid var(--mth-structure-gray);
   }
 }
