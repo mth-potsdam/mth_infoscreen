@@ -1,5 +1,4 @@
 import { CalendarEvent, GraphColumnMapping } from '../../../shared/types';
-import { log } from '../lib/log';
 import { ListItemRecord } from './sharePointLists';
 
 function stringField(value: unknown): string | null {
@@ -18,21 +17,14 @@ export function mapListItemsToEvents(
   items: ListItemRecord[],
   mapping: GraphColumnMapping
 ): CalendarEvent[] {
-  const mapped = items.map((item) => {
-    const rawStart = item.fields[mapping.start];
-    const start = dateField(rawStart);
-    log.info(
-      `Event date mapping for item ${item.id}: raw="${JSON.stringify(rawStart)}" (typeof ${typeof rawStart}) -> parsedUtc=${start}`
-    );
-    return {
-      id: item.id,
-      title: stringField(item.fields[mapping.title]),
-      start,
-      end: dateField(item.fields[mapping.end]),
-      location: stringField(item.fields[mapping.location]),
-      description: stringField(item.fields[mapping.description]),
-    };
-  });
+  const mapped = items.map((item) => ({
+    id: item.id,
+    title: stringField(item.fields[mapping.title]),
+    start: dateField(item.fields[mapping.start]),
+    end: dateField(item.fields[mapping.end]),
+    location: stringField(item.fields[mapping.location]),
+    description: stringField(item.fields[mapping.description]),
+  }));
 
   return mapped
     .filter((event): event is typeof event & { title: string } => Boolean(event.title))

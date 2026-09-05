@@ -77,6 +77,18 @@ infoscreen itself. A tenant admin needs to do this once:
    Title/Start/End/Location/Description. Use **Test Connection** to verify
    each step (token → site access → list access).
 
+**Before entering event times, check the SharePoint site's Regional
+Settings.** Graph always returns date/time column values as UTC, and the app
+always displays them converted to Europe/Berlin — but SharePoint converts
+what someone *types* into a date/time column to UTC using the *site's*
+configured regional timezone, not necessarily where your facility is. Many
+tenants are left on a US-default timezone, which silently shifts every
+entered time by several hours. Go to the site's **Settings → Site
+information → Site settings → Regional Settings** and set it to
+**"(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"** — do this
+*before* entering events, since fixing it later won't correct times already
+stored under the wrong offset (those need to be manually re-entered).
+
 ## Public transport data
 
 Departures and nearby-stop lookups come from
