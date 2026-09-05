@@ -38,13 +38,12 @@ openssl rand -hex 32
 
 ### Testing the production image with docker-compose
 
-`docker compose up` runs the real production image locally over plain HTTP.
-The admin session cookie is marked `Secure` whenever `NODE_ENV=production`
-(matching how it behaves in the real Coolify deployment, which sits behind
-HTTPS) — browsers and `curl` correctly refuse to store a `Secure` cookie set
-over plain HTTP, so logging into `/admin` won't work at `http://localhost:3000`
-in this mode. That's expected, not a bug: it works over HTTPS in production.
-Use `npm run dev` instead to exercise the admin login flow locally.
+`docker compose up` runs the real production image locally. By default the
+admin session cookie is **not** marked `Secure`, so admin login works over
+plain HTTP at `http://localhost:3000` — this matches how the app is meant to
+run on a local network (see "Deploying on a Synology NAS" below). If you
+ever put this app behind a reverse proxy that terminates HTTPS, set
+`COOKIE_SECURE=true` in its environment so the cookie is HTTPS-only.
 
 ## Setting up the Microsoft 365 connection
 
@@ -85,25 +84,50 @@ Departures come from the free, keyless
 Deutsche Bahn's HAFAS data (covers long-distance, regional, and local
 transit including buses and trams). No API key or account is needed.
 
-## Deploying with Coolify
+## Deploying on a Synology NAS
 
-1. Push this repository to GitHub.
-2. In Coolify, create a new **Application** from the GitHub repo, build pack
-   **Dockerfile**.
-3. **Before the first deploy**, add a **persistent volume** mounted at
-   `/data` — this is where `config.json` (facility location, stops,
-   intervals, Graph settings, admin password hash) lives. If this isn't
-   attached before the first deploy, all admin-configured settings are lost
-   on the next redeploy.
-4. Set environment variables in Coolify:
-   - `ADMIN_PASSWORD` — bootstraps the admin password on first boot only
-   - `APP_SECRET` — `openssl rand -hex 32`
-   - `NOMINATIM_USER_AGENT` — e.g. `mth-infoscreen (you@example.com)`
-   - optionally `TZ`, `PORT`, `CONFIG_DIR`, `DEPARTURES_API_BASE`
-5. Deploy. Coolify will build the multi-stage Dockerfile and run the
-   container; `/api/health` is used as the Docker healthcheck.
-6. Open the deployed URL, go to `/admin`, log in, and configure the facility
-   location, stops, intervals, and Microsoft 365 connection.
+This runs entirely on your local network via Synology's **Container
+Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
+
+1. **Install Container Manager** from Package Center if it isn't already.
+2. **Get the code onto the NAS.** Easiest via SSH (enable it under Control
+   Panel → Terminal & SNMP):
+   ```bash
+   ssh admin@<nas-ip>
+   cd /volume1/docker   # or wherever you keep app folders
+   git clone https://github.com/mth-potsdam/mth_infoscreen.git
+   ```
+   (No SSH/git? Download the repo as a ZIP from GitHub and extract it into a
+   shared folder via File Station instead.)
+3. **Create the env file.** In that folder, create a `.env` file (File
+   Station → right-click → Create → Text file, or via SSH) with:
+   ```bash
+   ADMIN_PASSWORD=choose-a-password
+   APP_SECRET=<output of: openssl rand -hex 32>
+   NOMINATIM_USER_AGENT=mth-infoscreen (you@example.com)
+   ```
+   Leave `COOKIE_SECURE` unset — the default (`false`) is correct here since
+   the NAS serves plain HTTP on your LAN.
+4. **Create the Project.** In Container Manager → Project → Create, give it
+   a name, set the path to the cloned folder (Container Manager will detect
+   `docker-compose.yml` there automatically), then Build.
+5. **Check the port.** `docker-compose.yml` publishes port `3000`. If
+   anything else on the NAS already uses it, edit the `ports:` line (e.g.
+   `"8080:3000"`) before building.
+6. **Find the NAS's local URL.** Use its LAN IP (Control Panel → Network) —
+   ideally reserve it as a static IP in your router's DHCP settings so the
+   URL never changes — and open `http://<nas-ip>:3000`. If DSM's firewall is
+   enabled (Control Panel → Security → Firewall), allow that port.
+7. Go to `/admin`, log in with `ADMIN_PASSWORD`, and configure the facility
+   location, stops, intervals, and Microsoft 365 connection. `config.json`
+   lives in the `./data` folder next to `docker-compose.yml` on the NAS's
+   own storage, so it survives rebuilds and reboots automatically.
+8. **To update later:** `git pull` in that folder (or re-download the ZIP),
+   then use Container Manager's Build/Rebuild on the project.
+
+Any other Docker host works the same way (Coolify, a Raspberry Pi, etc.) —
+just set `COOKIE_SECURE=true` in its environment if it sits behind a reverse
+proxy that terminates HTTPS, and make sure `/data` is a persistent volume.
 
 ## Displaying on a Fire TV Stick
 

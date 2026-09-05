@@ -11,6 +11,6 @@ export function sessionMiddleware() {
     maxAge: 12 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
   });
 }
