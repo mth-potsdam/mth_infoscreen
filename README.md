@@ -91,14 +91,32 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
 
 1. **Install Container Manager** from Package Center if it isn't already.
 2. **Get the code onto the NAS.** Easiest via SSH (enable it under Control
-   Panel → Terminal & SNMP):
+   Panel → Terminal & SNMP). The repo is private, and GitHub no longer
+   accepts passwords for git operations, so clone over SSH using a
+   **read-only deploy key** rather than HTTPS:
    ```bash
    ssh admin@<nas-ip>
-   cd /volume1/docker   # or wherever you keep app folders
-   git clone https://github.com/mth-potsdam/mth_infoscreen.git
+   ssh-keygen -t ed25519 -C "synology-mth-infoscreen" -f ~/.ssh/mth_infoscreen_deploy -N ""
+   cat ~/.ssh/mth_infoscreen_deploy.pub
    ```
-   (No SSH/git? Download the repo as a ZIP from GitHub and extract it into a
-   shared folder via File Station instead.)
+   Add that public key at
+   `github.com/mth-potsdam/mth_infoscreen/settings/keys` → **Add deploy
+   key** (leave "Allow write access" unchecked — pulls only need read
+   access). Then point SSH at it and clone:
+   ```bash
+   cat >> ~/.ssh/config <<'EOF'
+   Host github.com
+     IdentityFile ~/.ssh/mth_infoscreen_deploy
+     IdentitiesOnly yes
+   EOF
+   chmod 600 ~/.ssh/config
+   cd /volume1/docker   # or wherever you keep app folders
+   git clone git@github.com:mth-potsdam/mth_infoscreen.git
+   ```
+   (No SSH/git? Download the repo as a ZIP from GitHub — you'll need to be
+   logged into GitHub in a browser since it's private — and extract it into
+   a shared folder via File Station instead. You'll need to repeat that
+   manually for future updates, though, since there's no `git pull`.)
 3. **Create the env file.** In that folder, create a `.env` file (File
    Station → right-click → Create → Text file, or via SSH) with:
    ```bash
