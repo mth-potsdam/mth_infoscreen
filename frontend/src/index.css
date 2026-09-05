@@ -1,3 +1,19 @@
+/* mth-potsdam.de brand palette, pulled from the site's own CSS custom
+   properties (wp--preset--color--*). */
+:root {
+  --mth-green-dark: #00504f;
+  --mth-green-light: #97c52f;
+  --mth-green-light-rgb: 151, 197, 47;
+  --mth-sage: #86b891;
+  --mth-text-primary: #1a1a1a;
+  --mth-text-secondary: #8c8c88;
+  --mth-structure-gray: #b7b7b0;
+  --mth-off-white: #f3f3ef;
+  --mth-off-white-rgb: 243, 243, 239;
+  --mth-coral: #fe5f5b;
+  --mth-kiosk-bg: #03100f;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -6,8 +22,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #05070d;
-  color: #f4f6fb;
+  background: var(--mth-kiosk-bg);
+  color: var(--mth-off-white);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 

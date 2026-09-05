@@ -1,14 +1,14 @@
 .admin-shell {
   display: flex;
   min-height: 100vh;
-  background: #f5f6fa;
-  color: #1a1d29;
+  background: var(--mth-off-white);
+  color: var(--mth-text-primary);
 }
 
 .admin-nav {
   width: 220px;
-  background: #1a1d29;
-  color: #fff;
+  background: var(--mth-green-dark);
+  color: var(--mth-off-white);
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
@@ -21,22 +21,22 @@
 }
 
 .admin-nav a {
-  color: #c7ccdb;
+  color: rgba(var(--mth-off-white-rgb), 0.75);
   text-decoration: none;
   padding: 8px 12px;
   border-radius: 8px;
 }
 
 .admin-nav a.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(var(--mth-green-light-rgb), 0.25);
+  color: var(--mth-off-white);
 }
 
 .admin-nav__logout {
   margin-top: auto;
   background: none;
-  border: 1px solid #444;
-  color: #c7ccdb;
+  border: 1px solid rgba(var(--mth-off-white-rgb), 0.3);
+  color: rgba(var(--mth-off-white-rgb), 0.75);
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -62,7 +62,7 @@
   display: block;
   margin: 12px 0;
   font-size: 0.9rem;
-  color: #444;
+  color: var(--mth-text-primary);
 }
 
 .admin-page input,
@@ -71,7 +71,7 @@
   width: 100%;
   margin-top: 4px;
   padding: 8px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--mth-structure-gray);
   border-radius: 6px;
   font-size: 0.95rem;
 }
@@ -96,10 +96,16 @@ button {
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 6px;
-  border: 1px solid #2f5fdb;
-  background: #2f5fdb;
-  color: #fff;
+  border: 1px solid var(--mth-green-light);
+  background: var(--mth-green-light);
+  color: var(--mth-green-dark);
   font-size: 0.9rem;
+  font-weight: 600;
+}
+
+button:hover:not(:disabled) {
+  background: var(--mth-sage);
+  border-color: var(--mth-sage);
 }
 
 button:disabled {
@@ -108,16 +114,16 @@ button:disabled {
 }
 
 .admin-error {
-  color: #c0392b;
+  color: var(--mth-coral);
 }
 
 .admin-success {
-  color: #1f9d55;
+  color: var(--mth-green-dark);
 }
 
 .admin-attribution {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--mth-text-secondary);
 }
 
 .admin-stop-list,
@@ -127,13 +133,13 @@ button:disabled {
   margin: 8px 0;
   max-height: 260px;
   overflow-y: auto;
-  border: 1px solid #ddd;
+  border: 1px solid var(--mth-structure-gray);
   border-radius: 8px;
 }
 
 .admin-stop-list li,
 .admin-pick-list li {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(183, 183, 176, 0.4);
 }
 
 .admin-stop-list label {
@@ -146,7 +152,7 @@ button:disabled {
 
 .admin-stop-distance {
   margin-left: auto;
-  color: #888;
+  color: var(--mth-text-secondary);
   font-size: 0.8rem;
 }
 
@@ -155,12 +161,13 @@ button:disabled {
   text-align: left;
   background: none;
   border: none;
-  color: #1a1d29;
+  color: var(--mth-text-primary);
+  font-weight: normal;
   padding: 8px 12px;
 }
 
 .admin-pick--active {
-  background: #e8edff !important;
+  background: rgba(var(--mth-green-light-rgb), 0.15) !important;
   font-weight: 600;
 }
 
@@ -173,11 +180,11 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a1d29;
+  background: var(--mth-green-dark);
 }
 
 .admin-login__form {
-  background: #fff;
+  background: var(--mth-off-white);
   padding: 32px;
   border-radius: 12px;
   width: 320px;
@@ -189,5 +196,5 @@ button:disabled {
 .admin-loading {
   padding: 40px;
   text-align: center;
-  color: #888;
+  color: var(--mth-text-secondary);
 }
