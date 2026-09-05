@@ -130,21 +130,28 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
    unset — the default (`false`) is correct here since the NAS serves plain
    HTTP on your LAN. (File Station's text editor works too, but the command
    above avoids retyping a long random secret by hand.)
-4. **Create the Project.** In Container Manager → Project → Create, give it
+4. **Create the data folder.** Container Manager (unlike plain
+   `docker compose`) won't auto-create a bind-mount source folder that
+   doesn't exist yet, and will fail with "Bind mount failed: ... does not
+   exist" if you skip this:
+   ```bash
+   mkdir -p /volume1/docker/mth_infoscreen/data
+   ```
+5. **Create the Project.** In Container Manager → Project → Create, give it
    a name, set the path to the cloned folder (Container Manager will detect
    `docker-compose.yml` there automatically), then Build.
-5. **Check the port.** `docker-compose.yml` publishes port `3000`. If
+6. **Check the port.** `docker-compose.yml` publishes port `3000`. If
    anything else on the NAS already uses it, edit the `ports:` line (e.g.
    `"8080:3000"`) before building.
-6. **Find the NAS's local URL.** Use its LAN IP (Control Panel → Network) —
+7. **Find the NAS's local URL.** Use its LAN IP (Control Panel → Network) —
    ideally reserve it as a static IP in your router's DHCP settings so the
    URL never changes — and open `http://<nas-ip>:3000`. If DSM's firewall is
    enabled (Control Panel → Security → Firewall), allow that port.
-7. Go to `/admin`, log in with `ADMIN_PASSWORD`, and configure the facility
+8. Go to `/admin`, log in with `ADMIN_PASSWORD`, and configure the facility
    location, stops, intervals, and Microsoft 365 connection. `config.json`
    lives in the `./data` folder next to `docker-compose.yml` on the NAS's
    own storage, so it survives rebuilds and reboots automatically.
-8. **To update later:** `git pull` in that folder (or re-download the ZIP),
+9. **To update later:** `git pull` in that folder (or re-download the ZIP),
    then use Container Manager's Build/Rebuild on the project.
 
 Any other Docker host works the same way (Coolify, a Raspberry Pi, etc.) —
