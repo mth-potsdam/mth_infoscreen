@@ -105,7 +105,9 @@ export default function LocationStopsPage() {
       <h1>Nearby Stops</h1>
       {nearbyStopsQuery.isLoading && <p>Loading nearby stops…</p>}
       {nearbyStopsQuery.isError && (
-        <p className="admin-error">Could not load nearby stops. Save a location first.</p>
+        <p className="admin-error">
+          Could not load nearby stops: {(nearbyStopsQuery.error as Error)?.message}
+        </p>
       )}
       <ul className="admin-stop-list">
         {nearbyStopsQuery.data?.map((stop) => (

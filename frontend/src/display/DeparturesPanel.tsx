@@ -3,7 +3,7 @@ import DepartureRow from './DepartureRow';
 import StaleBadge from './StaleBadge';
 
 export default function DeparturesPanel() {
-  const { data } = useDepartures();
+  const { data, isLoading, isError, error } = useDepartures();
 
   return (
     <section className="panel panel--departures">
@@ -12,7 +12,10 @@ export default function DeparturesPanel() {
         {data && <StaleBadge dataAsOf={data.dataAsOf} stale={data.stale} />}
       </header>
       <div className="panel__body">
-        {!data && <p className="panel__empty">Loading departures…</p>}
+        {isLoading && <p className="panel__empty">Loading departures…</p>}
+        {!data && !isLoading && isError && (
+          <p className="panel__empty">Unable to load departures: {(error as Error)?.message}</p>
+        )}
         {data && data.departures.length === 0 && (
           <p className="panel__empty">No upcoming departures</p>
         )}
