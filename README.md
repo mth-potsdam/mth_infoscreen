@@ -154,6 +154,31 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
 9. **To update later:** `git pull` in that folder (or re-download the ZIP),
    then use Container Manager's Build/Rebuild on the project.
 
+### Synology troubleshooting
+
+- **`permission denied ... docker.sock`** — Docker commands need `sudo` on
+  DSM (the account also needs to be in the `administrators` group). If
+  `sudo docker compose ...` says the `compose` subcommand isn't found, try
+  the older `sudo docker-compose ...` (hyphenated) instead.
+- **Rebuilt in Container Manager but nothing changed** (e.g. still serving
+  an old JS bundle) — its Build action can reuse cached layers even when
+  source files changed. Force a real rebuild from SSH:
+  ```bash
+  sudo docker compose build --no-cache
+  sudo docker compose up -d
+  ```
+- **`port is already allocated`** on `docker compose up` — an old container
+  (often a previous run Container Manager itself started) is still holding
+  the port. Tear it down first: `sudo docker compose down`, then `up -d`
+  again. If that doesn't clear it, `sudo docker ps -a` to find whatever
+  else is publishing that port and remove it.
+- **Container Manager's UI shows the project "stopped" but the app is
+  reachable and running** — this happens after starting/stopping the
+  container via the CLI instead of the UI; Container Manager's status
+  tracking only updates for actions *it* initiates. Harmless, but to
+  resync: `sudo docker compose down`, then start the project from
+  Container Manager's own UI so it's tracking the container it started.
+
 Any other Docker host works the same way (Coolify, a Raspberry Pi, etc.) —
 just set `COOKIE_SECURE=true` in its environment if it sits behind a reverse
 proxy that terminates HTTPS, and make sure `/data` is a persistent volume.
