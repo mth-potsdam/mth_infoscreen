@@ -119,15 +119,17 @@ Manager** app (DSM 7.2+) — no public hosting, no HTTPS certificate needed.
    logged into GitHub in a browser since it's private — and extract it into
    a shared folder via File Station instead. You'll need to repeat that
    manually for future updates, though, since there's no `git pull`.)
-3. **Create the env file.** In that folder, create a `.env` file (File
-   Station → right-click → Create → Text file, or via SSH) with:
+3. **Create the env file.** In that same folder (via SSH — replace the
+   password and contact email first):
    ```bash
-   ADMIN_PASSWORD=choose-a-password
-   APP_SECRET=<output of: openssl rand -hex 32>
-   NOMINATIM_USER_AGENT=mth-infoscreen (you@example.com)
+   printf 'ADMIN_PASSWORD=choose-a-strong-password\nAPP_SECRET=%s\nNOMINATIM_USER_AGENT=mth-infoscreen (you@example.com)\n' "$(openssl rand -hex 32)" > .env
+   chmod 600 .env
+   cat .env   # sanity check
    ```
-   Leave `COOKIE_SECURE` unset — the default (`false`) is correct here since
-   the NAS serves plain HTTP on your LAN.
+   This generates a random `APP_SECRET` inline. Leave `COOKIE_SECURE`
+   unset — the default (`false`) is correct here since the NAS serves plain
+   HTTP on your LAN. (File Station's text editor works too, but the command
+   above avoids retyping a long random secret by hand.)
 4. **Create the Project.** In Container Manager → Project → Create, give it
    a name, set the path to the cloned folder (Container Manager will detect
    `docker-compose.yml` there automatically), then Build.
