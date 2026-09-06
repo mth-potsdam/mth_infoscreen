@@ -30,6 +30,27 @@
   width: auto;
 }
 
+.display-footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(16px, 2vw, 32px);
+  background: #fff;
+  padding: clamp(10px, 1.2vh, 16px) clamp(24px, 3vw, 48px);
+  color: var(--mth-green-dark);
+}
+
+.display-footer__date {
+  font-size: clamp(1rem, 1.4vw, 1.6rem);
+}
+
+.display-footer__clock {
+  font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .display-grid {
   flex: 1;
   min-height: 0;

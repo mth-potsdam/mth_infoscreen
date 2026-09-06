@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import DeparturesPanel from './DeparturesPanel';
 import './display.css';
+import DisplayFooter from './DisplayFooter';
 import DisplayHeader from './DisplayHeader';
 import EventsPanel from './EventsPanel';
 
@@ -17,6 +18,7 @@ export default function DisplayPage() {
         <DeparturesPanel />
         <EventsPanel />
       </div>
+      <DisplayFooter />
     </div>
   );
 }
