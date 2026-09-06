@@ -9,7 +9,7 @@ export interface GeocodeResult {
 export async function geocodeAddress(address: string): Promise<GeocodeResult | null> {
   const userAgent = process.env.APP_USER_AGENT;
   if (!userAgent) {
-    throw new Error('APP_USER_AGENT environment variable is required');
+    throw new Error('Die Umgebungsvariable APP_USER_AGENT ist erforderlich');
   }
   const url = new URL('https://nominatim.openstreetmap.org/search');
   url.searchParams.set('q', address);
@@ -20,7 +20,7 @@ export async function geocodeAddress(address: string): Promise<GeocodeResult | n
     headers: { 'User-Agent': userAgent },
   });
   if (!res.ok) {
-    throw new Error(`Geocoding failed: ${res.status} ${res.statusText}`);
+    throw new Error(`Geokodierung fehlgeschlagen: ${res.status} ${res.statusText}`);
   }
   const data = (await res.json()) as Array<{ lat: string; lon: string; display_name: string }>;
   if (data.length === 0) {

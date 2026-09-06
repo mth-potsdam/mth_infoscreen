@@ -43,7 +43,7 @@ router.put(
       clientSecret?: string;
     };
     if (!tenantId || !clientId) {
-      res.status(400).json({ error: 'tenantId and clientId are required' });
+      res.status(400).json({ error: 'tenantId und clientId sind erforderlich' });
       return;
     }
     await updateConfig((cfg) => {
@@ -100,7 +100,7 @@ router.put(
         description?: string;
       };
     if (!siteId || !listId || !title || !start) {
-      res.status(400).json({ error: 'siteId, listId, title and start are required' });
+      res.status(400).json({ error: 'siteId, listId, title und start sind erforderlich' });
       return;
     }
     const next = await updateConfig((cfg) => {
@@ -133,7 +133,7 @@ router.post(
 
     const { siteId, listId } = getConfig().graph;
     if (!siteId) {
-      res.json({ ok: false, step: 'site', error: 'No SharePoint site selected yet' });
+      res.json({ ok: false, step: 'site', error: 'Es wurde noch keine SharePoint-Website ausgewählt' });
       return;
     }
     try {
@@ -144,7 +144,7 @@ router.post(
     }
 
     if (!listId) {
-      res.json({ ok: false, step: 'list', error: 'No list selected yet' });
+      res.json({ ok: false, step: 'list', error: 'Es wurde noch keine Liste ausgewählt' });
       return;
     }
     try {
@@ -167,7 +167,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const { seconds } = req.body as { seconds?: number };
     if (!Number.isInteger(seconds) || (seconds as number) < 30) {
-      res.status(400).json({ error: 'seconds must be an integer >= 30' });
+      res.status(400).json({ error: 'seconds muss eine ganze Zahl ≥ 30 sein' });
       return;
     }
     const next = await updateConfig((cfg) => {

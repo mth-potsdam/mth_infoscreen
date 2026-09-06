@@ -20,9 +20,9 @@ export default function AdminLoginPage() {
   return (
     <div className="admin-login">
       <form className="admin-login__form" onSubmit={handleSubmit}>
-        <h1>Infoscreen Admin</h1>
+        <h1>Infoscreen-Verwaltung</h1>
         <label>
-          Password
+          Passwort
           <input
             type="password"
             value={password}
@@ -30,9 +30,9 @@ export default function AdminLoginPage() {
             autoFocus
           />
         </label>
-        {login.isError && <p className="admin-error">Invalid password</p>}
+        {login.isError && <p className="admin-error">Falsches Passwort</p>}
         <button type="submit" disabled={login.isPending}>
-          {login.isPending ? 'Logging in…' : 'Log in'}
+          {login.isPending ? 'Anmeldung läuft…' : 'Anmelden'}
         </button>
       </form>
     </div>

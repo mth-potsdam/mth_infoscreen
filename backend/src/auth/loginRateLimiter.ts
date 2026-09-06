@@ -5,5 +5,5 @@ export const loginRateLimiter = rateLimit({
   limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Too many login attempts, please try again later.' },
+  message: { error: 'Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.' },
 });

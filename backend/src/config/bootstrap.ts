@@ -10,7 +10,7 @@ export async function bootstrapAdminPassword(): Promise<void> {
   const initialPassword = process.env.ADMIN_PASSWORD;
   if (!initialPassword) {
     throw new Error(
-      'No admin password set yet. Set the ADMIN_PASSWORD environment variable on first boot to bootstrap the admin account.'
+      'Es wurde noch kein Admin-Passwort festgelegt. Setzen Sie beim ersten Start die Umgebungsvariable ADMIN_PASSWORD, um das Admin-Konto einzurichten.'
     );
   }
   const passwordHash = await bcrypt.hash(initialPassword, 12);

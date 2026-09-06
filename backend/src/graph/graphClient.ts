@@ -11,7 +11,7 @@ export async function graphGet<T>(path: string): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Graph request failed (${res.status}): ${text}`);
+    throw new Error(`Graph-Anfrage fehlgeschlagen (${res.status}): ${text}`);
   }
   return (await res.json()) as T;
 }

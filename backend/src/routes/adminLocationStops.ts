@@ -13,12 +13,12 @@ router.post(
   asyncHandler(async (req, res) => {
     const { address } = req.body as { address?: string };
     if (!address) {
-      res.status(400).json({ error: 'Address is required' });
+      res.status(400).json({ error: 'Adresse ist erforderlich' });
       return;
     }
     const result = await geocodeAddress(address);
     if (!result) {
-      res.status(404).json({ error: 'Address not found' });
+      res.status(404).json({ error: 'Adresse nicht gefunden' });
       return;
     }
     res.json(result);
@@ -34,7 +34,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const { lat, lon, address } = req.body as { lat?: number; lon?: number; address?: string };
     if (typeof lat !== 'number' || typeof lon !== 'number') {
-      res.status(400).json({ error: 'lat and lon are required numbers' });
+      res.status(400).json({ error: 'lat und lon müssen Zahlen sein' });
       return;
     }
     const next = await updateConfig((cfg) => {
@@ -50,7 +50,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { facility } = getConfig();
     if (facility.lat === null || facility.lon === null) {
-      res.status(400).json({ error: 'Set the facility location first' });
+      res.status(400).json({ error: 'Bitte zuerst den Standort der Einrichtung festlegen' });
       return;
     }
     const radius = Number(req.query.radius ?? 1000);
@@ -70,7 +70,7 @@ router.put(
       stops?: Array<{ id: string; name: string; lat: number; lon: number }>;
     };
     if (!Array.isArray(stops)) {
-      res.status(400).json({ error: 'stops must be an array' });
+      res.status(400).json({ error: 'stops muss ein Array sein' });
       return;
     }
     const next = await updateConfig((cfg) => {
@@ -90,7 +90,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const { seconds } = req.body as { seconds?: number };
     if (!Number.isInteger(seconds) || (seconds as number) < 10) {
-      res.status(400).json({ error: 'seconds must be an integer >= 10' });
+      res.status(400).json({ error: 'seconds muss eine ganze Zahl ≥ 10 sein' });
       return;
     }
     const next = await updateConfig((cfg) => {

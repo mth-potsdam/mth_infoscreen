@@ -11,7 +11,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 async function main(): Promise<void> {
   if (!process.env.APP_SECRET) {
-    throw new Error('APP_SECRET environment variable is required');
+    throw new Error('Die Umgebungsvariable APP_SECRET ist erforderlich');
   }
 
   await loadConfig();

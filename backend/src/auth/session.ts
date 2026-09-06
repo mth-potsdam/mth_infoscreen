@@ -3,7 +3,7 @@ import cookieSession from 'cookie-session';
 export function sessionMiddleware() {
   const secret = process.env.APP_SECRET;
   if (!secret) {
-    throw new Error('APP_SECRET environment variable is required');
+    throw new Error('Die Umgebungsvariable APP_SECRET ist erforderlich');
   }
   return cookieSession({
     name: 'mth_infoscreen_session',

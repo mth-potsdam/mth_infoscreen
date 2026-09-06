@@ -18,7 +18,7 @@ export function invalidateGraphToken(): void {
 export async function getGraphAccessToken(): Promise<string> {
   const { graph } = getConfig();
   if (!graph.tenantId || !graph.clientId || !graph.clientSecretEncrypted) {
-    throw new Error('Microsoft Graph is not configured yet');
+    throw new Error('Microsoft Graph ist noch nicht konfiguriert');
   }
 
   const now = Date.now();
@@ -48,7 +48,7 @@ export async function getGraphAccessToken(): Promise<string> {
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Graph token request failed: ${res.status} ${text}`);
+    throw new Error(`Graph-Token-Anfrage fehlgeschlagen: ${res.status} ${text}`);
   }
 
   const data = (await res.json()) as { access_token: string; expires_in: number };

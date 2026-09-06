@@ -71,16 +71,18 @@ export default function DeparturesPanel() {
   return (
     <section className="panel panel--departures">
       <header className="panel__header">
-        <h2>Departures</h2>
+        <h2>Abfahrten</h2>
         {data && <StaleBadge dataAsOf={data.dataAsOf} stale={data.stale} />}
       </header>
       <div className="panel__body" ref={bodyRef}>
-        {isLoading && <p className="panel__empty">Loading departures…</p>}
+        {isLoading && <p className="panel__empty">Abfahrten werden geladen…</p>}
         {!data && !isLoading && isError && (
-          <p className="panel__empty">Unable to load departures: {(error as Error)?.message}</p>
+          <p className="panel__empty">
+            Abfahrten konnten nicht geladen werden: {(error as Error)?.message}
+          </p>
         )}
         {data && data.departures.length === 0 && (
-          <p className="panel__empty">No upcoming departures</p>
+          <p className="panel__empty">Keine bevorstehenden Abfahrten</p>
         )}
         {data?.departures.map((departure, index) => (
           <DepartureRow
@@ -90,13 +92,13 @@ export default function DeparturesPanel() {
         ))}
       </div>
       <p className="panel__attribution">
-        Transit data:{' '}
+        Fahrplandaten:{' '}
         <a href="https://transitous.org/sources/" target="_blank" rel="noreferrer">
           transitous.org
         </a>
         , ©{' '}
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-          OpenStreetMap contributors
+          OpenStreetMap-Mitwirkende
         </a>
       </p>
     </section>

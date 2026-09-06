@@ -7,7 +7,7 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   if (isLoading) {
-    return <div className="admin-loading">Loading…</div>;
+    return <div className="admin-loading">Lädt…</div>;
   }
   if (!data?.authenticated) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;

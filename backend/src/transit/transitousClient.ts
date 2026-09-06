@@ -6,7 +6,7 @@ const BASE_URL = process.env.DEPARTURES_API_BASE || 'https://api.transitous.org'
 function userAgentHeaders(): Record<string, string> {
   const userAgent = process.env.APP_USER_AGENT;
   if (!userAgent) {
-    throw new Error('APP_USER_AGENT environment variable is required');
+    throw new Error('Die Umgebungsvariable APP_USER_AGENT ist erforderlich');
   }
   return { 'User-Agent': userAgent };
 }
@@ -75,7 +75,7 @@ export async function findNearbyStops(
 
   const res = await fetchWithTimeout(url.toString(), { headers: userAgentHeaders() });
   if (!res.ok) {
-    throw new Error(`Nearby stops lookup failed: ${res.status} ${res.statusText}`);
+    throw new Error(`Suche nach Haltestellen fehlgeschlagen: ${res.status} ${res.statusText}`);
   }
   const places = (await res.json()) as MapStopsPlace[];
   const withDistance = places
@@ -146,7 +146,7 @@ export async function fetchDepartures(stopId: string, n = 30): Promise<StopDepar
   const res = await fetchWithTimeout(url.toString(), { headers: userAgentHeaders() });
   if (!res.ok) {
     throw new Error(
-      `Departures lookup failed for stop ${stopId}: ${res.status} ${res.statusText}`
+      `Abfrage der Abfahrten für Haltestelle ${stopId} fehlgeschlagen: ${res.status} ${res.statusText}`
     );
   }
   const data = (await res.json()) as { stopTimes: StopTime[] };

@@ -7,15 +7,15 @@ export default function AdminLayout() {
   return (
     <div className="admin-shell">
       <nav className="admin-nav">
-        <div className="admin-nav__title">Infoscreen Admin</div>
+        <div className="admin-nav__title">Infoscreen-Verwaltung</div>
         <NavLink to="/admin" end>
-          Location &amp; Stops
+          Standort &amp; Haltestellen
         </NavLink>
-        <NavLink to="/admin/transit-interval">Transit Interval</NavLink>
+        <NavLink to="/admin/transit-interval">Abfahrts-Intervall</NavLink>
         <NavLink to="/admin/events">Microsoft 365</NavLink>
-        <NavLink to="/admin/events-interval">Events Interval</NavLink>
+        <NavLink to="/admin/events-interval">Veranstaltungs-Intervall</NavLink>
         <button className="admin-nav__logout" onClick={() => logout.mutate()}>
-          Log out
+          Abmelden
         </button>
       </nav>
       <main className="admin-content">

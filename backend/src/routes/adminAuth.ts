@@ -13,12 +13,12 @@ router.post(
   asyncHandler(async (req, res) => {
     const { password } = req.body as { password?: string };
     if (!password) {
-      res.status(400).json({ error: 'Password is required' });
+      res.status(400).json({ error: 'Passwort ist erforderlich' });
       return;
     }
     const { passwordHash } = getConfig().admin;
     if (!passwordHash || !(await bcrypt.compare(password, passwordHash))) {
-      res.status(401).json({ error: 'Invalid password' });
+      res.status(401).json({ error: 'Falsches Passwort' });
       return;
     }
     req.session = { authenticated: true };
@@ -44,14 +44,14 @@ router.post(
       newPassword?: string;
     };
     if (!currentPassword || !newPassword || newPassword.length < 8) {
-      res
-        .status(400)
-        .json({ error: 'Current password and a new password (min 8 chars) are required' });
+      res.status(400).json({
+        error: 'Aktuelles und neues Passwort (mind. 8 Zeichen) sind erforderlich',
+      });
       return;
     }
     const { passwordHash } = getConfig().admin;
     if (!passwordHash || !(await bcrypt.compare(currentPassword, passwordHash))) {
-      res.status(401).json({ error: 'Current password is incorrect' });
+      res.status(401).json({ error: 'Aktuelles Passwort ist falsch' });
       return;
     }
     const nextHash = await bcrypt.hash(newPassword, 12);

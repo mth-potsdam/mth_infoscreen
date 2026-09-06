@@ -88,45 +88,45 @@ export default function LocationStopsPage() {
 
   return (
     <div className="admin-page">
-      <h1>Facility Location</h1>
+      <h1>Standort der Einrichtung</h1>
       <div className="admin-field-row">
         <input
           type="text"
-          placeholder="Street, city, postcode"
+          placeholder="Straße, Ort, PLZ"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
         <button onClick={handleGeocode} disabled={geocode.isPending || !address}>
-          {geocode.isPending ? 'Searching…' : 'Geocode'}
+          {geocode.isPending ? 'Suche läuft…' : 'Adresse suchen'}
         </button>
       </div>
-      {geocode.isError && <p className="admin-error">Address not found</p>}
+      {geocode.isError && <p className="admin-error">Adresse nicht gefunden</p>}
       {resolved && (
         <div className="admin-resolved">
           <p>{resolved.displayName}</p>
           <p>
-            Lat {resolved.lat.toFixed(5)}, Lon {resolved.lon.toFixed(5)}
+            Breitengrad {resolved.lat.toFixed(5)}, Längengrad {resolved.lon.toFixed(5)}
           </p>
           <button onClick={handleSaveLocation} disabled={saveLocation.isPending}>
-            {saveLocation.isPending ? 'Saving…' : 'Save location'}
+            {saveLocation.isPending ? 'Wird gespeichert…' : 'Standort speichern'}
           </button>
         </div>
       )}
-      {saveLocation.isSuccess && <p className="admin-success">Location saved.</p>}
+      {saveLocation.isSuccess && <p className="admin-success">Standort gespeichert.</p>}
 
-      <h1>Nearby Stops</h1>
+      <h1>Haltestellen in der Nähe</h1>
       <p className="admin-attribution">
-        Stop data:{' '}
+        Haltestellendaten:{' '}
         <a href="https://transitous.org/sources/" target="_blank" rel="noreferrer">
           transitous.org
         </a>
         , ©{' '}
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-          OpenStreetMap contributors
+          OpenStreetMap-Mitwirkende
         </a>
       </p>
       <label>
-        Search radius: {formatRadius(radiusDisplay)}
+        Suchradius: {formatRadius(radiusDisplay)}
         <input
           type="range"
           min={200}
@@ -139,10 +139,10 @@ export default function LocationStopsPage() {
           onKeyUp={(e) => commitRadius(Number(e.currentTarget.value))}
         />
       </label>
-      {nearbyStopsQuery.isLoading && <p>Loading nearby stops…</p>}
+      {nearbyStopsQuery.isLoading && <p>Haltestellen werden geladen…</p>}
       {nearbyStopsQuery.isError && (
         <p className="admin-error">
-          Could not load nearby stops: {(nearbyStopsQuery.error as Error)?.message}
+          Haltestellen konnten nicht geladen werden: {(nearbyStopsQuery.error as Error)?.message}
         </p>
       )}
       <ul className="admin-stop-list">
@@ -161,9 +161,11 @@ export default function LocationStopsPage() {
         ))}
       </ul>
       <button onClick={handleSaveStops} disabled={saveSelectedStops.isPending}>
-        {saveSelectedStops.isPending ? 'Saving…' : 'Save selected stops'}
+        {saveSelectedStops.isPending ? 'Wird gespeichert…' : 'Ausgewählte Haltestellen speichern'}
       </button>
-      {saveSelectedStops.isSuccess && <p className="admin-success">Stop selection saved.</p>}
+      {saveSelectedStops.isSuccess && (
+        <p className="admin-success">Haltestellenauswahl gespeichert.</p>
+      )}
     </div>
   );
 }

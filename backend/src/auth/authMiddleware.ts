@@ -5,5 +5,5 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
     next();
     return;
   }
-  res.status(401).json({ error: 'Unauthorized' });
+  res.status(401).json({ error: 'Nicht autorisiert' });
 }

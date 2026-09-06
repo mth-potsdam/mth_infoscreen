@@ -3,7 +3,7 @@ import { createCipheriv, createDecipheriv, hkdfSync, randomBytes } from 'crypto'
 function deriveKey(): Buffer {
   const secret = process.env.APP_SECRET;
   if (!secret) {
-    throw new Error('APP_SECRET environment variable is required');
+    throw new Error('Die Umgebungsvariable APP_SECRET ist erforderlich');
   }
   const derived = hkdfSync('sha256', secret, '', 'mth-infoscreen-graph-secret', 32);
   return Buffer.from(derived);

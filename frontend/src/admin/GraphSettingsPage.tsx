@@ -12,6 +12,21 @@ import {
 const MAPPING_FIELDS = ['title', 'start', 'end', 'location', 'description'] as const;
 type MappingField = (typeof MAPPING_FIELDS)[number];
 
+const MAPPING_FIELD_LABELS: Record<MappingField, string> = {
+  title: 'Titel',
+  start: 'Beginn',
+  end: 'Ende',
+  location: 'Ort',
+  description: 'Beschreibung',
+};
+
+const TEST_STEP_LABELS: Record<string, string> = {
+  token: 'Anmeldung',
+  site: 'Website',
+  list: 'Liste',
+  items: 'Einträge',
+};
+
 export default function GraphSettingsPage() {
   const settings = useGraphSettings();
   const saveSettings = useSaveGraphSettings();
@@ -65,30 +80,30 @@ export default function GraphSettingsPage() {
 
   return (
     <div className="admin-page">
-      <h1>Microsoft 365 Connection</h1>
+      <h1>Microsoft-365-Verbindung</h1>
       <label>
-        Tenant ID
+        Mandanten-ID
         <input value={tenantId} onChange={(e) => setTenantId(e.target.value)} />
       </label>
       <label>
-        Client (App) ID
+        Client-ID (App)
         <input value={clientId} onChange={(e) => setClientId(e.target.value)} />
       </label>
       <label>
-        Client Secret {settings.data?.hasClientSecret && '(leave blank to keep current)'}
+        Client-Secret {settings.data?.hasClientSecret && '(leer lassen, um aktuelles beizubehalten)'}
         <input type="password" value={clientSecret} onChange={(e) => setClientSecret(e.target.value)} />
       </label>
       <button onClick={handleSaveCredentials} disabled={saveSettings.isPending}>
-        {saveSettings.isPending ? 'Saving…' : 'Save credentials'}
+        {saveSettings.isPending ? 'Wird gespeichert…' : 'Zugangsdaten speichern'}
       </button>
 
-      <h2>SharePoint Site &amp; List</h2>
+      <h2>SharePoint-Website &amp; Liste</h2>
       <label>
-        Search sites
+        Websites suchen
         <input
           value={siteSearch}
           onChange={(e) => setSiteSearch(e.target.value)}
-          placeholder="Site name…"
+          placeholder="Websitename…"
         />
       </label>
       <ul className="admin-pick-list">
@@ -110,7 +125,7 @@ export default function GraphSettingsPage() {
 
       {siteId && (
         <>
-          <h3>Lists in {siteName}</h3>
+          <h3>Listen in {siteName}</h3>
           <ul className="admin-pick-list">
             {lists.data?.map((list) => (
               <li key={list.id}>
@@ -131,10 +146,10 @@ export default function GraphSettingsPage() {
 
       {listId && columns.data && (
         <div className="admin-mapping">
-          <h3>Column Mapping</h3>
+          <h3>Spaltenzuordnung</h3>
           {MAPPING_FIELDS.map((field) => (
             <label key={field}>
-              {field}
+              {MAPPING_FIELD_LABELS[field]}
               <select
                 value={mapping[field]}
                 onChange={(e) => setMapping((prev) => ({ ...prev, [field]: e.target.value }))}
@@ -149,20 +164,20 @@ export default function GraphSettingsPage() {
             </label>
           ))}
           <button onClick={handleSaveMapping} disabled={saveMapping.isPending}>
-            {saveMapping.isPending ? 'Saving…' : 'Save mapping'}
+            {saveMapping.isPending ? 'Wird gespeichert…' : 'Zuordnung speichern'}
           </button>
         </div>
       )}
 
-      <h2>Connection Test</h2>
+      <h2>Verbindungstest</h2>
       <button onClick={() => testConnection.mutate()} disabled={testConnection.isPending}>
-        {testConnection.isPending ? 'Testing…' : 'Test connection'}
+        {testConnection.isPending ? 'Wird getestet…' : 'Verbindung testen'}
       </button>
       {testConnection.data && (
         <p className={testConnection.data.ok ? 'admin-success' : 'admin-error'}>
           {testConnection.data.ok
-            ? 'Connection successful.'
-            : `Failed at step "${testConnection.data.step}": ${testConnection.data.error}`}
+            ? 'Verbindung erfolgreich.'
+            : `Fehler bei Schritt „${TEST_STEP_LABELS[testConnection.data.step ?? ''] ?? testConnection.data.step}": ${testConnection.data.error}`}
         </p>
       )}
     </div>
