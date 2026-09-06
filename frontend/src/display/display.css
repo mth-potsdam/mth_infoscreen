@@ -140,8 +140,6 @@
 
 .departure-row__line {
   font-weight: 700;
-  color: var(--mth-green-dark);
-  background: rgba(var(--mth-green-light-rgb), 0.2);
   border-radius: 8px;
   padding: 2px 10px;
   text-align: center;

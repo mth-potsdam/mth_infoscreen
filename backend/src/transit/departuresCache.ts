@@ -19,6 +19,21 @@ const cache = new Map<string, StopCacheEntry>();
 // minute or two apart. Collapse those into a single entry.
 const DUPLICATE_WINDOW_MS = 3 * 60 * 1000;
 
+const MIN_MINUTES_AHEAD = 10;
+
+// Applied before dedup: if several duplicate-feed entries for the same
+// trip straddle the 10-minute cutoff (e.g. one at 9 minutes, another at
+// 11), we want the still-valid later one to survive, not have dedup collapse
+// them down to the earliest one and then have the filter discard it.
+function filterMinMinutesAhead(departures: Departure[]): Departure[] {
+  const now = Date.now();
+  return departures.filter((d) => {
+    if (!d.when) return true;
+    const minutesAhead = (new Date(d.when).getTime() - now) / 60_000;
+    return minutesAhead >= MIN_MINUTES_AHEAD;
+  });
+}
+
 function dedupeDepartures(departures: Departure[]): Departure[] {
   const sorted = [...departures].sort((a, b) => (a.when ?? '').localeCompare(b.when ?? ''));
   const lastKeptTime = new Map<string, number>();
@@ -90,7 +105,9 @@ export function getDeparturesResponse(): DeparturesResponse {
     .map((stop) => cache.get(stop.id))
     .filter((e): e is StopCacheEntry => Boolean(e));
 
-  const departures = dedupeDepartures(entries.flatMap((entry) => entry.departures));
+  const departures = dedupeDepartures(
+    filterMinMinutesAhead(entries.flatMap((entry) => entry.departures))
+  );
 
   const staleStops = entries.filter((e) => e.stale).map((e) => e.stopName);
   const fetchedTimestamps = entries.map((e) => e.fetchedAt).sort();

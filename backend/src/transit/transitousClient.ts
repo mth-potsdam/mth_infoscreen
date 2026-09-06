@@ -132,10 +132,16 @@ function delaySecondsBetween(scheduled?: string, actual?: string): number | null
   return Number.isNaN(diffMs) ? null : Math.round(diffMs / 1000);
 }
 
-export async function fetchDepartures(stopId: string, n = 10): Promise<StopDeparture[]> {
+// Requests enough of a time window that, after the "at least 10 minutes
+// ahead" filter is applied downstream, there's still roughly an hour of
+// departures left for the display's auto-scroll to work through.
+const DEPARTURES_WINDOW_SECONDS = 80 * 60;
+
+export async function fetchDepartures(stopId: string, n = 30): Promise<StopDeparture[]> {
   const url = new URL(`${BASE_URL}/api/v6/stoptimes`);
   url.searchParams.set('stopId', stopId);
   url.searchParams.set('n', String(n));
+  url.searchParams.set('window', String(DEPARTURES_WINDOW_SECONDS));
 
   const res = await fetchWithTimeout(url.toString(), { headers: userAgentHeaders() });
   if (!res.ok) {
