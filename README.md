@@ -45,6 +45,44 @@ run on a local network (see "Deploying on a Synology NAS" below). If you
 ever put this app behind a reverse proxy that terminates HTTPS, set
 `COOKIE_SECURE=true` in its environment so the cookie is HTTPS-only.
 
+## Header font (Cy)
+
+The display header uses the "Cy" typeface, which is licensed and not
+included in this (public) repo. Building the frontend requires these two
+files to exist locally — they're gitignored, so a fresh clone won't have
+them:
+
+```
+frontend/src/assets/fonts/Cy-Regular.woff2
+frontend/src/assets/fonts/Cy-ExtraBold.woff2
+```
+
+Convert the `.otf` files (e.g. from `~/Library/Fonts/`) with
+[fonttools](https://github.com/fonttools/fonttools):
+
+```bash
+pip3 install fonttools brotli
+python3 -c "
+from fontTools.ttLib import TTFont
+for src, dst in [
+    ('/path/to/Cy-Regular.otf', 'frontend/src/assets/fonts/Cy-Regular.woff2'),
+    ('/path/to/Cy-ExtraBold.otf', 'frontend/src/assets/fonts/Cy-ExtraBold.woff2'),
+]:
+    font = TTFont(src)
+    font.flavor = 'woff2'
+    font.save(dst)
+"
+```
+
+Without these files, `vite build` (and therefore the Docker build) fails —
+so when setting up a new clone (including the NAS), create the folder and
+copy the two `.woff2` files over before building, e.g.:
+
+```bash
+ssh <user>@<nas-ip> "mkdir -p /volume1/docker/mth_infoscreen/frontend/src/assets/fonts"
+scp frontend/src/assets/fonts/*.woff2 <user>@<nas-ip>:/volume1/docker/mth_infoscreen/frontend/src/assets/fonts/
+```
+
 ## Setting up the Microsoft 365 connection
 
 The events panel reads a Microsoft List via the Graph API using an **app-only

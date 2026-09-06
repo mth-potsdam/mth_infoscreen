@@ -13,6 +13,22 @@
   --mth-coral: #fe5f5b;
 }
 
+@font-face {
+  font-family: 'Cy';
+  src: url('./assets/fonts/Cy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cy';
+  src: url('./assets/fonts/Cy-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }

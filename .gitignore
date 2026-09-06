@@ -4,3 +4,7 @@ data/
 .env
 *.log
 .DS_Store
+
+# Licensed font, not ours to redistribute via this public repo — see
+# README's "Cy font" note for how to obtain and place these locally.
+frontend/src/assets/fonts/
