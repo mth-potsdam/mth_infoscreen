@@ -11,7 +11,7 @@ export default function AdminLayout() {
         <NavLink to="/admin" end>
           Standort &amp; Haltestellen
         </NavLink>
-        <NavLink to="/admin/transit-interval">Abfahrts-Intervall</NavLink>
+        <NavLink to="/admin/transit-interval">Abfahrten-Einstellungen</NavLink>
         <NavLink to="/admin/events">Microsoft 365</NavLink>
         <NavLink to="/admin/events-interval">Veranstaltungs-Intervall</NavLink>
         <button className="admin-nav__logout" onClick={() => logout.mutate()}>

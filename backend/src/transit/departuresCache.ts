@@ -25,12 +25,20 @@ const MIN_MINUTES_AHEAD = 10;
 // trip straddle the 10-minute cutoff (e.g. one at 9 minutes, another at
 // 11), we want the still-valid later one to survive, not have dedup collapse
 // them down to the earliest one and then have the filter discard it.
-function filterMinMinutesAhead(departures: Departure[]): Departure[] {
+//
+// The upper bound (lookaheadMinutes) also has to be enforced here rather
+// than trusting transitous's own `window` param: its `n` (minimum result
+// count) parameter takes priority when a stop isn't frequent enough, so the
+// API can and does return departures well beyond the requested window to
+// satisfy that minimum — verified live (a stop configured with a 45-minute
+// lookahead still returned departures 72+ minutes out). Filtering here makes
+// the admin-configured timeframe an actual guarantee, not just a hint.
+function filterWithinLookahead(departures: Departure[], lookaheadMinutes: number): Departure[] {
   const now = Date.now();
   return departures.filter((d) => {
     if (!d.when) return true;
     const minutesAhead = (new Date(d.when).getTime() - now) / 60_000;
-    return minutesAhead >= MIN_MINUTES_AHEAD;
+    return minutesAhead >= MIN_MINUTES_AHEAD && minutesAhead <= lookaheadMinutes;
   });
 }
 
@@ -58,9 +66,9 @@ function dedupeDepartures(departures: Departure[]): Departure[] {
 }
 
 export async function refreshDepartures(): Promise<void> {
-  const { selectedStops } = getConfig().transit;
+  const { selectedStops, lookaheadMinutes } = getConfig().transit;
   const results = await Promise.allSettled(
-    selectedStops.map((stop) => fetchDepartures(stop.id))
+    selectedStops.map((stop) => fetchDepartures(stop.id, lookaheadMinutes))
   );
 
   results.forEach((result, index) => {
@@ -100,13 +108,13 @@ export async function refreshDepartures(): Promise<void> {
 }
 
 export function getDeparturesResponse(): DeparturesResponse {
-  const { selectedStops, refreshIntervalSeconds } = getConfig().transit;
+  const { selectedStops, refreshIntervalSeconds, lookaheadMinutes } = getConfig().transit;
   const entries = selectedStops
     .map((stop) => cache.get(stop.id))
     .filter((e): e is StopCacheEntry => Boolean(e));
 
   const departures = dedupeDepartures(
-    filterMinMinutesAhead(entries.flatMap((entry) => entry.departures))
+    filterWithinLookahead(entries.flatMap((entry) => entry.departures), lookaheadMinutes)
   );
 
   const staleStops = entries.filter((e) => e.stale).map((e) => e.stopName);

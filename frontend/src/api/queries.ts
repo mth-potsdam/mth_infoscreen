@@ -127,6 +127,23 @@ export function useSaveDeparturesInterval() {
   });
 }
 
+export function useDeparturesLookahead() {
+  return useQuery({
+    queryKey: ['admin', 'departures-lookahead'],
+    queryFn: () => api.get<{ lookaheadMinutes: number }>('/admin/settings/departures-lookahead'),
+  });
+}
+
+export function useSaveDeparturesLookahead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (minutes: number) =>
+      api.put<{ lookaheadMinutes: number }>('/admin/settings/departures-lookahead', { minutes }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'departures-lookahead'] }),
+  });
+}
+
 export function useGraphSettings() {
   return useQuery({
     queryKey: ['admin', 'graph-settings'],

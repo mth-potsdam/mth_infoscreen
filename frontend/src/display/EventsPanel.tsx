@@ -1,9 +1,13 @@
+import { useRef } from 'react';
 import { useEvents } from '../api/queries';
 import EventRow from './EventRow';
 import StaleBadge from './StaleBadge';
+import { useAutoScroll } from './useAutoScroll';
 
 export default function EventsPanel() {
   const { data, isLoading, isError, error } = useEvents();
+  const bodyRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(bodyRef, data?.events.length);
 
   return (
     <section className="panel panel--events">
@@ -11,7 +15,7 @@ export default function EventsPanel() {
         <h2>Veranstaltungen</h2>
         {data && <StaleBadge dataAsOf={data.dataAsOf} stale={data.stale} />}
       </header>
-      <div className="panel__body">
+      <div className="panel__body" ref={bodyRef}>
         {isLoading && <p className="panel__empty">Veranstaltungen werden geladen…</p>}
         {!data && !isLoading && isError && (
           <p className="panel__empty">

@@ -101,4 +101,26 @@ router.put(
   })
 );
 
+router.get('/admin/settings/departures-lookahead', (_req, res) => {
+  res.json({ lookaheadMinutes: getConfig().transit.lookaheadMinutes });
+});
+
+router.put(
+  '/admin/settings/departures-lookahead',
+  asyncHandler(async (req, res) => {
+    const { minutes } = req.body as { minutes?: number };
+    if (!Number.isInteger(minutes) || (minutes as number) < 15 || (minutes as number) > 360) {
+      res
+        .status(400)
+        .json({ error: 'minutes muss eine ganze Zahl zwischen 15 und 360 sein' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.transit.lookaheadMinutes = minutes as number;
+      return cfg;
+    });
+    res.json({ lookaheadMinutes: next.transit.lookaheadMinutes });
+  })
+);
+
 export default router;
