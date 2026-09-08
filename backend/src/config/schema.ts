@@ -14,6 +14,7 @@ export const columnMappingSchema = z.object({
   end: z.string(),
   location: z.string(),
   description: z.string(),
+  showDetails: z.string().default(''),
 });
 
 export const configSchema = z.object({
@@ -41,6 +42,8 @@ export const configSchema = z.object({
     listName: z.string().nullable(),
     columnMapping: columnMappingSchema.nullable(),
     refreshIntervalSeconds: z.number().int().positive(),
+    overviewDurationSeconds: z.number().int().positive(),
+    detailDurationSeconds: z.number().int().positive(),
   }),
 });
 
@@ -61,5 +64,7 @@ export const defaultConfig: AppConfig = {
     listName: null,
     columnMapping: null,
     refreshIntervalSeconds: 300,
+    overviewDurationSeconds: 60,
+    detailDurationSeconds: 15,
   },
 };

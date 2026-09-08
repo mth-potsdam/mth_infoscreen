@@ -197,6 +197,7 @@ export function useSaveGraphMapping() {
       end: string;
       location: string;
       description: string;
+      showDetails: string;
     }) => api.put('/admin/graph/mapping', mapping),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'graph-settings'] }),
   });
@@ -221,5 +222,45 @@ export function useSaveEventsInterval() {
     mutationFn: (seconds: number) =>
       api.put<{ refreshIntervalSeconds: number }>('/admin/settings/events-interval', { seconds }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'events-interval'] }),
+  });
+}
+
+export function useEventsOverviewDuration() {
+  return useQuery({
+    queryKey: ['admin', 'events-overview-duration'],
+    queryFn: () =>
+      api.get<{ overviewDurationSeconds: number }>('/admin/settings/events-overview-duration'),
+  });
+}
+
+export function useSaveEventsOverviewDuration() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (seconds: number) =>
+      api.put<{ overviewDurationSeconds: number }>('/admin/settings/events-overview-duration', {
+        seconds,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'events-overview-duration'] }),
+  });
+}
+
+export function useEventsDetailDuration() {
+  return useQuery({
+    queryKey: ['admin', 'events-detail-duration'],
+    queryFn: () =>
+      api.get<{ detailDurationSeconds: number }>('/admin/settings/events-detail-duration'),
+  });
+}
+
+export function useSaveEventsDetailDuration() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (seconds: number) =>
+      api.put<{ detailDurationSeconds: number }>('/admin/settings/events-detail-duration', {
+        seconds,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'events-detail-duration'] }),
   });
 }

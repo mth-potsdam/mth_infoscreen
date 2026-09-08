@@ -9,7 +9,14 @@ import {
   useTestGraphConnection,
 } from '../api/queries';
 
-const MAPPING_FIELDS = ['title', 'start', 'end', 'location', 'description'] as const;
+const MAPPING_FIELDS = [
+  'title',
+  'start',
+  'end',
+  'location',
+  'description',
+  'showDetails',
+] as const;
 type MappingField = (typeof MAPPING_FIELDS)[number];
 
 const MAPPING_FIELD_LABELS: Record<MappingField, string> = {
@@ -18,6 +25,7 @@ const MAPPING_FIELD_LABELS: Record<MappingField, string> = {
   end: 'Ende',
   location: 'Ort',
   description: 'Beschreibung',
+  showDetails: 'Detailanzeige (Ja/Nein-Feld)',
 };
 
 const TEST_STEP_LABELS: Record<string, string> = {
@@ -48,6 +56,7 @@ export default function GraphSettingsPage() {
     end: '',
     location: '',
     description: '',
+    showDetails: '',
   });
 
   const sites = useGraphSites(siteSearch, siteSearch.length > 1);
@@ -147,6 +156,12 @@ export default function GraphSettingsPage() {
       {listId && columns.data && (
         <div className="admin-mapping">
           <h3>Spaltenzuordnung</h3>
+          <p className="admin-attribution">
+            Die "Detailanzeige" ist optional: Wird hier ein Ja/Nein-Feld ausgewählt, blendet die
+            Anzeige Veranstaltungen mit dem Wert "Ja" reihum als eigene Detailseite ein (Name,
+            Beginn/Ende, Ort, Beschreibung), bevor sie wieder zur Übersicht zurückkehrt. Ohne
+            Auswahl wird nur die Übersicht gezeigt.
+          </p>
           {MAPPING_FIELDS.map((field) => (
             <label key={field}>
               {MAPPING_FIELD_LABELS[field]}

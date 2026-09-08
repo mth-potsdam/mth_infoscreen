@@ -30,12 +30,15 @@ export async function refreshEvents(): Promise<void> {
 }
 
 export function getEventsResponse(): EventsResponse {
-  const { refreshIntervalSeconds } = getConfig().graph;
+  const { refreshIntervalSeconds, overviewDurationSeconds, detailDurationSeconds } =
+    getConfig().graph;
   return {
     generatedAt: new Date().toISOString(),
     dataAsOf: state.fetchedAt,
     stale: state.stale,
     refreshIntervalSeconds,
+    overviewDurationSeconds,
+    detailDurationSeconds,
     events: state.events,
   };
 }

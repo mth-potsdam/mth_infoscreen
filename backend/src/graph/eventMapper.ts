@@ -13,6 +13,20 @@ function dateField(value: unknown): string | null {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+// SharePoint Yes/No columns surface as a native boolean via Graph, but
+// other column types an admin might map here (Choice, single line of
+// text) could come through as a number or a string — handle those
+// permissively rather than requiring an exact boolean.
+function boolField(value: unknown): boolean {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    return normalized === 'true' || normalized === 'yes' || normalized === 'ja' || normalized === '1';
+  }
+  return false;
+}
+
 export function mapListItemsToEvents(
   items: ListItemRecord[],
   mapping: GraphColumnMapping
@@ -24,6 +38,7 @@ export function mapListItemsToEvents(
     end: dateField(item.fields[mapping.end]),
     location: stringField(item.fields[mapping.location]),
     description: stringField(item.fields[mapping.description]),
+    showDetails: mapping.showDetails ? boolField(item.fields[mapping.showDetails]) : false,
   }));
 
   return mapped

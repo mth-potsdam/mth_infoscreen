@@ -47,6 +47,9 @@ export interface CalendarEvent {
   end: string | null;
   location: string | null;
   description: string | null;
+  // Whether this event should appear in the detail-view rotation, driven
+  // by an admin-mapped Yes/No column on the Microsoft List.
+  showDetails: boolean;
 }
 
 export interface EventsResponse {
@@ -54,6 +57,12 @@ export interface EventsResponse {
   dataAsOf: string | null;
   stale: boolean;
   refreshIntervalSeconds: number;
+  // How long the display should show the events overview vs. each
+  // showDetails event's own detail page, in seconds. Bundled here (rather
+  // than a separate admin-only endpoint) since the public display needs
+  // them without authenticating.
+  overviewDurationSeconds: number;
+  detailDurationSeconds: number;
   events: CalendarEvent[];
 }
 
@@ -69,6 +78,9 @@ export interface GraphColumnMapping {
   end: string;
   location: string;
   description: string;
+  // Name of a Yes/No column controlling the detail-view rotation. Empty
+  // means not configured (no events get a detail page).
+  showDetails: string;
 }
 
 export interface GraphSettingsPublic {

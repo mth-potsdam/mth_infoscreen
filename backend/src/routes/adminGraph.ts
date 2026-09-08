@@ -87,18 +87,29 @@ router.get(
 router.put(
   '/admin/graph/mapping',
   asyncHandler(async (req, res) => {
-    const { siteId, siteName, listId, listName, title, start, end, location, description } =
-      req.body as {
-        siteId?: string;
-        siteName?: string;
-        listId?: string;
-        listName?: string;
-        title?: string;
-        start?: string;
-        end?: string;
-        location?: string;
-        description?: string;
-      };
+    const {
+      siteId,
+      siteName,
+      listId,
+      listName,
+      title,
+      start,
+      end,
+      location,
+      description,
+      showDetails,
+    } = req.body as {
+      siteId?: string;
+      siteName?: string;
+      listId?: string;
+      listName?: string;
+      title?: string;
+      start?: string;
+      end?: string;
+      location?: string;
+      description?: string;
+      showDetails?: string;
+    };
     if (!siteId || !listId || !title || !start) {
       res.status(400).json({ error: 'siteId, listId, title und start sind erforderlich' });
       return;
@@ -114,6 +125,7 @@ router.put(
         end: end ?? '',
         location: location ?? '',
         description: description ?? '',
+        showDetails: showDetails ?? '',
       };
       return cfg;
     });
@@ -175,6 +187,46 @@ router.put(
       return cfg;
     });
     res.json({ refreshIntervalSeconds: next.graph.refreshIntervalSeconds });
+  })
+);
+
+router.get('/admin/settings/events-overview-duration', (_req, res) => {
+  res.json({ overviewDurationSeconds: getConfig().graph.overviewDurationSeconds });
+});
+
+router.put(
+  '/admin/settings/events-overview-duration',
+  asyncHandler(async (req, res) => {
+    const { seconds } = req.body as { seconds?: number };
+    if (!Number.isInteger(seconds) || (seconds as number) < 10) {
+      res.status(400).json({ error: 'seconds muss eine ganze Zahl ≥ 10 sein' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.graph.overviewDurationSeconds = seconds as number;
+      return cfg;
+    });
+    res.json({ overviewDurationSeconds: next.graph.overviewDurationSeconds });
+  })
+);
+
+router.get('/admin/settings/events-detail-duration', (_req, res) => {
+  res.json({ detailDurationSeconds: getConfig().graph.detailDurationSeconds });
+});
+
+router.put(
+  '/admin/settings/events-detail-duration',
+  asyncHandler(async (req, res) => {
+    const { seconds } = req.body as { seconds?: number };
+    if (!Number.isInteger(seconds) || (seconds as number) < 5) {
+      res.status(400).json({ error: 'seconds muss eine ganze Zahl ≥ 5 sein' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.graph.detailDurationSeconds = seconds as number;
+      return cfg;
+    });
+    res.json({ detailDurationSeconds: next.graph.detailDurationSeconds });
   })
 );
 

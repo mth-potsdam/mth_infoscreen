@@ -189,6 +189,47 @@
   font-size: 0.75em;
 }
 
+.event-detail {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(10px, 1.5vh, 20px);
+}
+
+.event-detail__position {
+  font-size: clamp(0.8rem, 1vw, 1.1rem);
+  color: var(--mth-text-secondary);
+}
+
+.event-detail__title {
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  color: var(--mth-green-dark);
+  margin: 0;
+  font-weight: 700;
+}
+
+.event-detail__date {
+  font-size: clamp(1.2rem, 1.8vw, 2rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.event-detail__location {
+  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
+  color: var(--mth-text-secondary);
+  margin: 0;
+}
+
+.event-detail__description {
+  font-size: clamp(1rem, 1.3vw, 1.4rem);
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
 @media (max-width: 900px) {
   .display-grid {
     grid-template-columns: 1fr;
