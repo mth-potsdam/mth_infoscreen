@@ -156,6 +156,60 @@ button:disabled {
   font-size: 0.8rem;
 }
 
+.admin-stop-list--modes {
+  max-height: 420px;
+}
+
+.admin-stop-list--modes li {
+  padding: 10px 12px;
+}
+
+.admin-stop-item--selected {
+  background: rgba(var(--mth-green-light-rgb), 0.08);
+}
+
+.admin-stop-item__header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.admin-stop-item__modes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 6px;
+}
+
+.admin-mode-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 3px 8px;
+  border: 1px solid var(--mth-structure-gray);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.admin-mode-chip:has(input:checked) {
+  background: rgba(var(--mth-green-light-rgb), 0.2);
+  border-color: var(--mth-green-dark);
+}
+
+.admin-link-button {
+  background: none;
+  border: none;
+  color: var(--mth-green-dark);
+  font-size: 0.8rem;
+  font-weight: normal;
+  text-decoration: underline;
+  padding: 2px 4px;
+}
+
 .admin-pick-list button {
   width: 100%;
   text-align: left;

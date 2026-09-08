@@ -1,12 +1,21 @@
-export interface Stop {
+interface StopLocation {
   id: string;
   name: string;
   lat: number;
   lon: number;
 }
 
-export interface NearbyStop extends Stop {
+export interface Stop extends StopLocation {
+  // Which transit modes (e.g. "BUS", "SUBURBAN", "REGIONAL_RAIL") to show
+  // departures for at this stop. Empty means unfiltered (show everything).
+  selectedModes: string[];
+}
+
+export interface NearbyStop extends StopLocation {
   distanceMeters: number;
+  // The modes actually served at this stop, as reported by the transit
+  // API — used to build the mode picker in the admin panel.
+  availableModes: string[];
 }
 
 export interface Departure {

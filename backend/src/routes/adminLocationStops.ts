@@ -67,14 +67,24 @@ router.put(
   '/admin/stops/selected',
   asyncHandler(async (req, res) => {
     const { stops } = req.body as {
-      stops?: Array<{ id: string; name: string; lat: number; lon: number }>;
+      stops?: Array<{
+        id: string;
+        name: string;
+        lat: number;
+        lon: number;
+        selectedModes?: string[];
+      }>;
     };
     if (!Array.isArray(stops)) {
       res.status(400).json({ error: 'stops muss ein Array sein' });
       return;
     }
+    const normalizedStops = stops.map((stop) => ({
+      ...stop,
+      selectedModes: stop.selectedModes ?? [],
+    }));
     const next = await updateConfig((cfg) => {
-      cfg.transit.selectedStops = stops;
+      cfg.transit.selectedStops = normalizedStops;
       return cfg;
     });
     res.json(next.transit.selectedStops);

@@ -5,6 +5,7 @@ export const stopSchema = z.object({
   name: z.string(),
   lat: z.number(),
   lon: z.number(),
+  selectedModes: z.array(z.string()).default([]),
 });
 
 export const columnMappingSchema = z.object({

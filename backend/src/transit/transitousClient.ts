@@ -29,6 +29,7 @@ interface MapStopsPlace {
   stopId?: string;
   lat: number;
   lon: number;
+  modes?: string[];
 }
 
 const METERS_PER_DEGREE_LAT = 111_320;
@@ -48,19 +49,26 @@ function boundingBox(lat: number, lon: number, radiusMeters: number): { min: str
 }
 
 // Multiple GTFS feeds (VBB, DELFI, long-distance coach operators, ...) often
-// publish the same physical stop under slightly different IDs. Collapse
-// entries with the same name within ~10m of each other, keeping the closest.
+// publish the same physical stop under slightly different IDs, sometimes
+// each reporting only a subset of the modes actually served there. Collapse
+// entries with the same name within ~10m of each other, keeping the closest
+// and merging their modes so the admin sees the full picture for that stop.
 function dedupeStops(stops: NearbyStop[]): NearbyStop[] {
-  const seen = new Set<string>();
-  const result: NearbyStop[] = [];
+  const kept = new Map<string, NearbyStop>();
+  const order: string[] = [];
   for (const stop of stops) {
     const key = `${stop.name}|${Math.round(stop.lat * 10_000)}|${Math.round(stop.lon * 10_000)}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      result.push(stop);
+    const existing = kept.get(key);
+    if (!existing) {
+      kept.set(key, stop);
+      order.push(key);
+    } else {
+      existing.availableModes = Array.from(
+        new Set([...existing.availableModes, ...stop.availableModes])
+      ).sort();
     }
   }
-  return result;
+  return order.map((key) => kept.get(key) as NearbyStop);
 }
 
 export async function findNearbyStops(
@@ -86,6 +94,7 @@ export async function findNearbyStops(
       lat: place.lat,
       lon: place.lon,
       distanceMeters: Math.round(distanceMeters(lat, lon, place.lat, place.lon)),
+      availableModes: [...new Set(place.modes ?? [])].sort(),
     }))
     .filter((stop) => stop.distanceMeters <= radiusMeters)
     .sort((a, b) => a.distanceMeters - b.distanceMeters);
@@ -135,12 +144,16 @@ function delaySecondsBetween(scheduled?: string, actual?: string): number | null
 export async function fetchDepartures(
   stopId: string,
   lookaheadMinutes: number,
+  modes: string[] = [],
   n = 30
 ): Promise<StopDeparture[]> {
   const url = new URL(`${BASE_URL}/api/v6/stoptimes`);
   url.searchParams.set('stopId', stopId);
   url.searchParams.set('n', String(n));
   url.searchParams.set('window', String(lookaheadMinutes * 60));
+  if (modes.length > 0) {
+    url.searchParams.set('mode', modes.join(','));
+  }
 
   const res = await fetchWithTimeout(url.toString(), { headers: userAgentHeaders() });
   if (!res.ok) {

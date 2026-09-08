@@ -68,7 +68,7 @@ function dedupeDepartures(departures: Departure[]): Departure[] {
 export async function refreshDepartures(): Promise<void> {
   const { selectedStops, lookaheadMinutes } = getConfig().transit;
   const results = await Promise.allSettled(
-    selectedStops.map((stop) => fetchDepartures(stop.id, lookaheadMinutes))
+    selectedStops.map((stop) => fetchDepartures(stop.id, lookaheadMinutes, stop.selectedModes))
   );
 
   results.forEach((result, index) => {
