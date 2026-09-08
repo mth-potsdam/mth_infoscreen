@@ -93,16 +93,26 @@ export default function LocationStopsPage() {
   }, [facilityQuery.data]);
 
   useEffect(() => {
-    if (selectedStopsQuery.data) {
-      const map = new Map<string, Set<string>>();
-      for (const stop of selectedStopsQuery.data) {
-        const modes = map.get(stop.name) ?? new Set<string>();
+    if (!selectedStopsQuery.data) return;
+    const map = new Map<string, Set<string>>();
+    for (const stop of selectedStopsQuery.data) {
+      const modes = map.get(stop.name) ?? new Set<string>();
+      if (stop.selectedModes.length > 0) {
         for (const mode of stop.selectedModes) modes.add(mode);
-        map.set(stop.name, modes);
+      } else {
+        // Saved before per-mode filtering existed, or explicitly left
+        // unfiltered: treat as "every mode this platform currently
+        // offers" rather than "nothing", so it doesn't render as
+        // unchecked and get silently dropped on the next save.
+        const match = nearbyStopsQuery.data?.find((s) => s.id === stop.id);
+        if (match) {
+          for (const mode of match.availableModes) modes.add(mode);
+        }
       }
-      setSelection(map);
+      map.set(stop.name, modes);
     }
-  }, [selectedStopsQuery.data]);
+    setSelection(map);
+  }, [selectedStopsQuery.data, nearbyStopsQuery.data]);
 
   async function handleGeocode() {
     const result = await geocode.mutateAsync(address);
