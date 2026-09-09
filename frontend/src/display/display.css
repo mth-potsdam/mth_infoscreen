@@ -189,6 +189,22 @@
   font-size: 0.75em;
 }
 
+.event-row--today {
+  background: rgba(var(--mth-green-light-rgb), 0.15);
+  border-radius: 8px;
+  padding-left: clamp(8px, 1vw, 12px);
+  padding-right: clamp(8px, 1vw, 12px);
+}
+
+.event-row--today .event-row__time {
+  color: var(--mth-green-dark);
+  font-weight: 700;
+}
+
+.event-row--today .event-row__title {
+  color: var(--mth-green-dark);
+}
+
 .event-detail {
   flex: 1;
   min-height: 0;
