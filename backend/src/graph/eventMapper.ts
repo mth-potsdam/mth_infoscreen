@@ -41,8 +41,18 @@ export function mapListItemsToEvents(
     showDetails: mapping.showDetails ? boolField(item.fields[mapping.showDetails]) : false,
   }));
 
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
   return mapped
     .filter((event): event is typeof event & { title: string } => Boolean(event.title))
-    .filter((event) => !event.end || new Date(event.end).getTime() >= Date.now())
+    .filter((event) => {
+      // Without an end date, treat the event as still relevant for roughly
+      // a day after it starts rather than keeping it forever (or cutting it
+      // off the instant the start time passes, which would drop a same-day
+      // event mid-day).
+      if (event.end) return new Date(event.end).getTime() >= Date.now();
+      if (!event.start) return true;
+      return new Date(event.start).getTime() + DAY_MS >= Date.now();
+    })
     .sort((a, b) => (a.start ?? '').localeCompare(b.start ?? ''));
 }
