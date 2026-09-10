@@ -53,16 +53,18 @@ export default function EventOverviewPage() {
         <p className="event-overview-page__empty">Keine bevorstehenden Veranstaltungen</p>
       )}
 
-      {groups.map((group) => (
-        <section key={group.key} className="event-overview-month">
-          <h2 className="event-overview-month__label">{group.label}</h2>
-          <div className="event-overview-month__boxes">
-            {group.events.map((event, index) => (
-              <EventOverviewCard key={event.id} event={event} alternate={index % 2 === 1} />
-            ))}
-          </div>
-        </section>
-      ))}
+      <div className="event-overview-months">
+        {groups.map((group) => (
+          <section key={group.key} className="event-overview-month">
+            <h2 className="event-overview-month__label">{group.label}</h2>
+            <div className="event-overview-month__boxes">
+              {group.events.map((event, index) => (
+                <EventOverviewCard key={event.id} event={event} alternate={index % 2 === 1} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }
