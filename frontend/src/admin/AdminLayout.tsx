@@ -15,6 +15,7 @@ export default function AdminLayout() {
         <NavLink to="/admin/events">Microsoft 365</NavLink>
         <NavLink to="/admin/events-interval">Veranstaltungen-Einstellungen</NavLink>
         <NavLink to="/admin/media">Medien &amp; Diashow</NavLink>
+        <NavLink to="/admin/display-durations">Anzeigedauer</NavLink>
         <button className="admin-nav__logout" onClick={() => logout.mutate()}>
           Abmelden
         </button>

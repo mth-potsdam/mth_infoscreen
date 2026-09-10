@@ -48,10 +48,23 @@ export function getConfig(): AppConfig {
   return current;
 }
 
+// Concurrent callers must not race: each call clones `current`, mutates it,
+// and writes it back, so two calls overlapping would let the one that reads
+// the older snapshot last clobber the other's change when it saves. Chaining
+// onto this queue serializes calls so each mutator always sees the previous
+// call's result.
+let writeQueue: Promise<unknown> = Promise.resolve();
+
 export async function updateConfig(
   mutator: (config: AppConfig) => AppConfig
 ): Promise<AppConfig> {
-  const next = mutator(structuredClone(current));
-  await saveConfig(next);
-  return next;
+  let result!: AppConfig;
+  const task = writeQueue.then(async () => {
+    const next = mutator(structuredClone(current));
+    await saveConfig(next);
+    result = next;
+  });
+  writeQueue = task.catch(() => undefined);
+  await task;
+  return result;
 }

@@ -1,14 +1,5 @@
-import { useEffect, useState } from 'react';
-import {
-  useDeleteMedia,
-  useMediaItems,
-  useReorderMedia,
-  useSaveSlideshowItemDuration,
-  useSaveSlideshowOverviewDuration,
-  useSlideshowItemDuration,
-  useSlideshowOverviewDuration,
-  useUploadMedia,
-} from '../api/queries';
+import { useState } from 'react';
+import { useDeleteMedia, useMediaItems, useReorderMedia, useUploadMedia } from '../api/queries';
 
 const ACCEPTED_TYPES = 'image/jpeg,image/png,image/webp,video/mp4';
 
@@ -27,26 +18,6 @@ export default function MediaPage() {
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadErrors, setUploadErrors] = useState<string[]>([]);
-
-  const currentOverview = useSlideshowOverviewDuration();
-  const saveOverview = useSaveSlideshowOverviewDuration();
-  const [overviewSeconds, setOverviewSeconds] = useState(300);
-
-  const currentItem = useSlideshowItemDuration();
-  const saveItem = useSaveSlideshowItemDuration();
-  const [itemSeconds, setItemSeconds] = useState(8);
-
-  useEffect(() => {
-    if (currentOverview.data) {
-      setOverviewSeconds(currentOverview.data.overviewDurationSeconds);
-    }
-  }, [currentOverview.data]);
-
-  useEffect(() => {
-    if (currentItem.data) {
-      setItemSeconds(currentItem.data.itemDurationSeconds);
-    }
-  }, [currentItem.data]);
 
   async function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -156,46 +127,10 @@ export default function MediaPage() {
         ))}
       </ul>
 
-      <h1>Anzeigedauer der Übersicht</h1>
       <p className="admin-attribution">
-        Wie lange die normale Anzeige (Abfahrten &amp; Veranstaltungen) gezeigt wird, bevor im
-        Vollbildmodus zur Diashow gewechselt wird.
+        Die Anzeigedauer der Diashow (Übersicht &amp; je Bild) wird zusammen mit allen anderen
+        Anzeigedauer-Einstellungen unter „Anzeigedauer“ verwaltet.
       </p>
-      <div className="admin-field-row">
-        <input
-          type="number"
-          min={30}
-          value={overviewSeconds}
-          onChange={(e) => setOverviewSeconds(Number(e.target.value))}
-        />
-        <span>Sekunden</span>
-        <button
-          onClick={() => saveOverview.mutate(overviewSeconds)}
-          disabled={saveOverview.isPending}
-        >
-          {saveOverview.isPending ? 'Wird gespeichert…' : 'Speichern'}
-        </button>
-      </div>
-      {saveOverview.isSuccess && <p className="admin-success">Anzeigedauer gespeichert.</p>}
-
-      <h1>Anzeigedauer je Bild</h1>
-      <p className="admin-attribution">
-        Wie lange jedes Bild in der Diashow gezeigt wird. Videos spielen stattdessen bis zu ihrem
-        eigenen Ende.
-      </p>
-      <div className="admin-field-row">
-        <input
-          type="number"
-          min={3}
-          value={itemSeconds}
-          onChange={(e) => setItemSeconds(Number(e.target.value))}
-        />
-        <span>Sekunden</span>
-        <button onClick={() => saveItem.mutate(itemSeconds)} disabled={saveItem.isPending}>
-          {saveItem.isPending ? 'Wird gespeichert…' : 'Speichern'}
-        </button>
-      </div>
-      {saveItem.isSuccess && <p className="admin-success">Anzeigedauer gespeichert.</p>}
     </div>
   );
 }

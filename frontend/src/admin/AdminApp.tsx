@@ -3,6 +3,7 @@ import './admin.css';
 import AdminLayout from './AdminLayout';
 import AdminLoginPage from './AdminLoginPage';
 import AuthGuard from './AuthGuard';
+import DisplayDurationsPage from './DisplayDurationsPage';
 import EventsIntervalPage from './EventsIntervalPage';
 import GraphSettingsPage from './GraphSettingsPage';
 import LocationStopsPage from './LocationStopsPage';
@@ -26,6 +27,7 @@ export default function AdminApp() {
         <Route path="events" element={<GraphSettingsPage />} />
         <Route path="events-interval" element={<EventsIntervalPage />} />
         <Route path="media" element={<MediaPage />} />
+        <Route path="display-durations" element={<DisplayDurationsPage />} />
       </Route>
     </Routes>
   );
