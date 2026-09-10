@@ -2,10 +2,21 @@
   position: fixed;
   inset: 0;
   z-index: 100;
+  background: #000;
+}
+
+.slideshow-overlay__layer {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slideshow-overlay__layer--visible {
+  opacity: 1;
 }
 
 .slideshow-overlay__media {
