@@ -5,6 +5,7 @@ import { bootstrapAdminPassword } from './config/bootstrap';
 import { loadConfig } from './config/configStore';
 import { startEventsScheduler } from './graph/scheduler';
 import { log } from './lib/log';
+import { ensureMediaDir } from './media/mediaStore';
 import { startDeparturesScheduler } from './transit/scheduler';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -15,6 +16,7 @@ async function main(): Promise<void> {
   }
 
   await loadConfig();
+  await ensureMediaDir();
   await bootstrapAdminPassword();
 
   const app = createApp();

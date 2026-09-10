@@ -7,7 +7,9 @@ import type {
   GraphList,
   GraphSettingsPublic,
   GraphSite,
+  MediaItem,
   NearbyStop,
+  SlideshowResponse,
   Stop,
   TestConnectionResult,
 } from '../../../shared/types';
@@ -262,5 +264,89 @@ export function useSaveEventsDetailDuration() {
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['admin', 'events-detail-duration'] }),
+  });
+}
+
+export function useMediaItems() {
+  return useQuery({
+    queryKey: ['admin', 'media'],
+    queryFn: () => api.get<MediaItem[]>('/admin/media'),
+  });
+}
+
+export function useUploadMedia() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => {
+      const form = new FormData();
+      form.append('file', file);
+      return api.postForm<MediaItem>('/admin/media', form);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'media'] }),
+  });
+}
+
+export function useDeleteMedia() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete<MediaItem[]>(`/admin/media/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'media'] }),
+  });
+}
+
+export function useReorderMedia() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (order: string[]) => api.put<MediaItem[]>('/admin/media/order', { order }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'media'] }),
+  });
+}
+
+export function useSlideshowOverviewDuration() {
+  return useQuery({
+    queryKey: ['admin', 'slideshow-overview-duration'],
+    queryFn: () =>
+      api.get<{ overviewDurationSeconds: number }>('/admin/settings/slideshow-overview-duration'),
+  });
+}
+
+export function useSaveSlideshowOverviewDuration() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (seconds: number) =>
+      api.put<{ overviewDurationSeconds: number }>(
+        '/admin/settings/slideshow-overview-duration',
+        { seconds }
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'slideshow-overview-duration'] }),
+  });
+}
+
+export function useSlideshowItemDuration() {
+  return useQuery({
+    queryKey: ['admin', 'slideshow-item-duration'],
+    queryFn: () =>
+      api.get<{ itemDurationSeconds: number }>('/admin/settings/slideshow-item-duration'),
+  });
+}
+
+export function useSaveSlideshowItemDuration() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (seconds: number) =>
+      api.put<{ itemDurationSeconds: number }>('/admin/settings/slideshow-item-duration', {
+        seconds,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'slideshow-item-duration'] }),
+  });
+}
+
+export function useSlideshow() {
+  return useQuery({
+    queryKey: ['display', 'slideshow'],
+    queryFn: () => api.get<SlideshowResponse>('/display/slideshow'),
+    refetchInterval: 5 * 60 * 1000,
   });
 }

@@ -2,9 +2,11 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import { sessionMiddleware } from './auth/session';
 import { log } from './lib/log';
+import { MEDIA_DIR } from './media/mediaStore';
 import adminAuthRouter from './routes/adminAuth';
 import adminGraphRouter from './routes/adminGraph';
 import adminLocationStopsRouter from './routes/adminLocationStops';
+import adminMediaRouter from './routes/adminMedia';
 import displayRouter from './routes/display';
 import healthRouter from './routes/health';
 
@@ -15,11 +17,18 @@ export function createApp(): Express {
   app.use(express.json());
   app.use(sessionMiddleware());
 
+  // Public, unauthenticated: the kiosk display loads slideshow media without
+  // a session. express.static handles HTTP Range requests for free, which
+  // benefits video buffering. Mounted under /api (not a bare /media) so the
+  // Vite dev-server proxy, which only forwards /api/*, also reaches it.
+  app.use('/api/media', express.static(MEDIA_DIR));
+
   app.use('/api', healthRouter);
   app.use('/api', displayRouter);
   app.use('/api', adminAuthRouter);
   app.use('/api', adminLocationStopsRouter);
   app.use('/api', adminGraphRouter);
+  app.use('/api', adminMediaRouter);
 
   if (process.env.NODE_ENV === 'production') {
     const publicDir = path.join(__dirname, '..', 'public');

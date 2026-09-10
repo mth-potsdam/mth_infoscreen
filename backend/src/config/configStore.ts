@@ -3,7 +3,7 @@ import path from 'path';
 import { log } from '../lib/log';
 import { AppConfig, configSchema, defaultConfig } from './schema';
 
-const CONFIG_DIR = process.env.CONFIG_DIR || '/data';
+export const CONFIG_DIR = process.env.CONFIG_DIR || '/data';
 const CONFIG_PATH = path.join(CONFIG_DIR, 'config.json');
 
 let current: AppConfig = defaultConfig;

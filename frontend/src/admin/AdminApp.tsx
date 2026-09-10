@@ -6,6 +6,7 @@ import AuthGuard from './AuthGuard';
 import EventsIntervalPage from './EventsIntervalPage';
 import GraphSettingsPage from './GraphSettingsPage';
 import LocationStopsPage from './LocationStopsPage';
+import MediaPage from './MediaPage';
 import TransitIntervalPage from './TransitIntervalPage';
 
 export default function AdminApp() {
@@ -24,6 +25,7 @@ export default function AdminApp() {
         <Route path="transit-interval" element={<TransitIntervalPage />} />
         <Route path="events" element={<GraphSettingsPage />} />
         <Route path="events-interval" element={<EventsIntervalPage />} />
+        <Route path="media" element={<MediaPage />} />
       </Route>
     </Routes>
   );

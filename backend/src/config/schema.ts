@@ -17,6 +17,16 @@ export const columnMappingSchema = z.object({
   showDetails: z.string().default(''),
 });
 
+export const mediaItemSchema = z.object({
+  id: z.string(),
+  filename: z.string(),
+  originalName: z.string(),
+  type: z.enum(['image', 'video']),
+  mimeType: z.string(),
+  sizeBytes: z.number().int().nonnegative(),
+  uploadedAt: z.string(),
+});
+
 export const configSchema = z.object({
   version: z.literal(1),
   admin: z.object({
@@ -45,6 +55,11 @@ export const configSchema = z.object({
     overviewDurationSeconds: z.number().int().positive(),
     detailDurationSeconds: z.number().int().positive(),
   }),
+  slideshow: z.object({
+    overviewDurationSeconds: z.number().int().positive(),
+    itemDurationSeconds: z.number().int().positive(),
+    items: z.array(mediaItemSchema),
+  }),
 });
 
 export type AppConfig = z.infer<typeof configSchema>;
@@ -66,5 +81,10 @@ export const defaultConfig: AppConfig = {
     refreshIntervalSeconds: 300,
     overviewDurationSeconds: 60,
     detailDurationSeconds: 15,
+  },
+  slideshow: {
+    overviewDurationSeconds: 300,
+    itemDurationSeconds: 8,
+    items: [],
   },
 };

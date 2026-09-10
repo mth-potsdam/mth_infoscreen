@@ -116,3 +116,25 @@ export interface TestConnectionResult {
   step?: 'token' | 'site' | 'list' | 'items';
   error?: string;
 }
+
+export interface MediaItem {
+  id: string;
+  filename: string;
+  originalName: string;
+  type: 'image' | 'video';
+  mimeType: string;
+  sizeBytes: number;
+  uploadedAt: string;
+}
+
+export interface SlideshowMediaItem {
+  id: string;
+  filename: string;
+  type: 'image' | 'video';
+}
+
+export interface SlideshowResponse {
+  overviewDurationSeconds: number;
+  itemDurationSeconds: number;
+  items: SlideshowMediaItem[];
+}
