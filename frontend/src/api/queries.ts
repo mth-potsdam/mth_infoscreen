@@ -153,15 +153,6 @@ export function useGraphSettings() {
   });
 }
 
-export function useSaveGraphSettings() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (settings: { tenantId: string; clientId: string; clientSecret?: string }) =>
-      api.put<GraphSettingsPublic>('/admin/graph/settings', settings),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'graph-settings'] }),
-  });
-}
-
 export function useGraphSites(search: string, enabled: boolean) {
   return useQuery({
     queryKey: ['admin', 'graph-sites', search],

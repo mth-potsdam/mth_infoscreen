@@ -5,7 +5,6 @@ import {
   useGraphSettings,
   useGraphSites,
   useSaveGraphMapping,
-  useSaveGraphSettings,
   useTestGraphConnection,
 } from '../api/queries';
 
@@ -37,13 +36,8 @@ const TEST_STEP_LABELS: Record<string, string> = {
 
 export default function GraphSettingsPage() {
   const settings = useGraphSettings();
-  const saveSettings = useSaveGraphSettings();
   const saveMapping = useSaveGraphMapping();
   const testConnection = useTestGraphConnection();
-
-  const [tenantId, setTenantId] = useState('');
-  const [clientId, setClientId] = useState('');
-  const [clientSecret, setClientSecret] = useState('');
 
   const [siteSearch, setSiteSearch] = useState('');
   const [siteId, setSiteId] = useState<string | null>(null);
@@ -65,8 +59,6 @@ export default function GraphSettingsPage() {
 
   useEffect(() => {
     if (settings.data) {
-      setTenantId(settings.data.tenantId);
-      setClientId(settings.data.clientId);
       setSiteId(settings.data.siteId);
       setSiteName(settings.data.siteName ?? '');
       setListId(settings.data.listId);
@@ -77,11 +69,6 @@ export default function GraphSettingsPage() {
     }
   }, [settings.data]);
 
-  async function handleSaveCredentials() {
-    await saveSettings.mutateAsync({ tenantId, clientId, clientSecret: clientSecret || undefined });
-    setClientSecret('');
-  }
-
   async function handleSaveMapping() {
     if (!siteId || !listId) return;
     await saveMapping.mutateAsync({ siteId, siteName, listId, listName, ...mapping });
@@ -90,21 +77,18 @@ export default function GraphSettingsPage() {
   return (
     <div className="admin-page">
       <h1>Microsoft-365-Verbindung</h1>
-      <label>
-        Mandanten-ID
-        <input value={tenantId} onChange={(e) => setTenantId(e.target.value)} />
-      </label>
-      <label>
-        Client-ID (App)
-        <input value={clientId} onChange={(e) => setClientId(e.target.value)} />
-      </label>
-      <label>
-        Client-Secret {settings.data?.hasClientSecret && '(leer lassen, um aktuelles beizubehalten)'}
-        <input type="password" value={clientSecret} onChange={(e) => setClientSecret(e.target.value)} />
-      </label>
-      <button onClick={handleSaveCredentials} disabled={saveSettings.isPending}>
-        {saveSettings.isPending ? 'Wird gespeichert…' : 'Zugangsdaten speichern'}
-      </button>
+      <p className="admin-attribution">
+        Mandanten-ID, Client-ID und Client-Secret werden über die Umgebungsvariablen
+        GRAPH_TENANT_ID, GRAPH_CLIENT_ID und GRAPH_CLIENT_SECRET in der .env-Datei konfiguriert,
+        nicht hier im Admin-Bereich.
+      </p>
+      {settings.data && (
+        <p className={settings.data.credentialsConfigured ? 'admin-success' : 'admin-error'}>
+          {settings.data.credentialsConfigured
+            ? 'Zugangsdaten sind konfiguriert.'
+            : 'Zugangsdaten fehlen — GRAPH_TENANT_ID, GRAPH_CLIENT_ID und GRAPH_CLIENT_SECRET in der .env-Datei setzen und den Container neu starten.'}
+        </p>
+      )}
 
       <h2>SharePoint-Website &amp; Liste</h2>
       <label>

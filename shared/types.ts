@@ -84,9 +84,10 @@ export interface GraphColumnMapping {
 }
 
 export interface GraphSettingsPublic {
-  tenantId: string;
-  clientId: string;
-  hasClientSecret: boolean;
+  // Whether GRAPH_TENANT_ID, GRAPH_CLIENT_ID and GRAPH_CLIENT_SECRET are all
+  // set in the environment — these are configured via the .env file, not
+  // the admin UI, so their values are never exposed to the client.
+  credentialsConfigured: boolean;
   siteId: string | null;
   siteName: string | null;
   listId: string | null;

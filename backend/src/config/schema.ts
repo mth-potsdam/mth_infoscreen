@@ -43,9 +43,6 @@ export const configSchema = z.object({
     selectedStops: z.array(stopSchema),
   }),
   graph: z.object({
-    tenantId: z.string(),
-    clientId: z.string(),
-    clientSecretEncrypted: z.string().nullable(),
     siteId: z.string().nullable(),
     siteName: z.string().nullable(),
     listId: z.string().nullable(),
@@ -70,9 +67,6 @@ export const defaultConfig: AppConfig = {
   facility: { address: '', lat: null, lon: null },
   transit: { refreshIntervalSeconds: 60, lookaheadMinutes: 90, selectedStops: [] },
   graph: {
-    tenantId: '',
-    clientId: '',
-    clientSecretEncrypted: null,
     siteId: null,
     siteName: null,
     listId: null,

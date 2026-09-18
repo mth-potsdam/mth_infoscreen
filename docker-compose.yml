@@ -12,6 +12,9 @@ services:
       - APP_SECRET=${APP_SECRET}
       - APP_USER_AGENT=${APP_USER_AGENT}
       - DEPARTURES_API_BASE=${DEPARTURES_API_BASE:-https://api.transitous.org}
+      - GRAPH_TENANT_ID=${GRAPH_TENANT_ID}
+      - GRAPH_CLIENT_ID=${GRAPH_CLIENT_ID}
+      - GRAPH_CLIENT_SECRET=${GRAPH_CLIENT_SECRET}
     volumes:
       - ./data:/data
     restart: unless-stopped

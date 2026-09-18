@@ -109,11 +109,13 @@ infoscreen itself. A tenant admin needs to do this once:
    is done via a Graph API call (not the portal UI) — see
    [Microsoft's docs on Sites.Selected](https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread#restricting-app-permissions-to-specific-site-collections),
    or use `Sites.Read.All` initially to get up and running.
-6. In the infoscreen admin panel, go to **Microsoft 365**, enter the tenant
-   ID, client ID, and client secret, then search for and select the
-   SharePoint site and the specific list, and map its columns to
-   Title/Start/End/Location/Description. Use **Test Connection** to verify
-   each step (token → site access → list access).
+6. Add the tenant ID, client ID, and client secret to your `.env` file as
+   `GRAPH_TENANT_ID`, `GRAPH_CLIENT_ID`, and `GRAPH_CLIENT_SECRET` (see
+   `.env.example`), then restart the container — these are never entered or
+   shown in the admin UI. In the infoscreen admin panel, go to **Microsoft
+   365**, search for and select the SharePoint site and the specific list,
+   and map its columns to Title/Start/End/Location/Description. Use **Test
+   Connection** to verify each step (token → site access → list access).
 
 **Before entering event times, check the SharePoint site's Regional
 Settings.** Graph always returns date/time column values as UTC, and the app

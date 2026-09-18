@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { GraphSettingsPublic } from '../../../shared/types';
 import { requireAdmin } from '../auth/authMiddleware';
 import { getConfig, updateConfig } from '../config/configStore';
-import { getGraphAccessToken, invalidateGraphToken } from '../graph/graphAuth';
+import { getGraphAccessToken, getGraphCredentials } from '../graph/graphAuth';
 import {
   fetchListItems,
   listColumnsForList,
@@ -10,7 +10,6 @@ import {
   searchSites,
 } from '../graph/sharePointLists';
 import { asyncHandler } from '../lib/asyncHandler';
-import { encrypt } from '../lib/crypto';
 
 const router = Router();
 router.use(requireAdmin);
@@ -18,9 +17,7 @@ router.use(requireAdmin);
 function toPublicSettings(): GraphSettingsPublic {
   const { graph } = getConfig();
   return {
-    tenantId: graph.tenantId,
-    clientId: graph.clientId,
-    hasClientSecret: Boolean(graph.clientSecretEncrypted),
+    credentialsConfigured: getGraphCredentials() !== null,
     siteId: graph.siteId,
     siteName: graph.siteName,
     listId: graph.listId,
@@ -33,31 +30,6 @@ function toPublicSettings(): GraphSettingsPublic {
 router.get('/admin/graph/settings', (_req, res) => {
   res.json(toPublicSettings());
 });
-
-router.put(
-  '/admin/graph/settings',
-  asyncHandler(async (req, res) => {
-    const { tenantId, clientId, clientSecret } = req.body as {
-      tenantId?: string;
-      clientId?: string;
-      clientSecret?: string;
-    };
-    if (!tenantId || !clientId) {
-      res.status(400).json({ error: 'tenantId und clientId sind erforderlich' });
-      return;
-    }
-    await updateConfig((cfg) => {
-      cfg.graph.tenantId = tenantId;
-      cfg.graph.clientId = clientId;
-      if (clientSecret) {
-        cfg.graph.clientSecretEncrypted = encrypt(clientSecret);
-      }
-      return cfg;
-    });
-    invalidateGraphToken();
-    res.json(toPublicSettings());
-  })
-);
 
 router.get(
   '/admin/graph/sites',
