@@ -39,12 +39,16 @@ export function mapListItemsToEvents(
     location: stringField(item.fields[mapping.location]),
     description: stringField(item.fields[mapping.description]),
     showDetails: mapping.showDetails ? boolField(item.fields[mapping.showDetails]) : false,
+    // Unmapped means not configured — every event stays visible, matching
+    // behavior from before this field existed.
+    visible: mapping.visible ? boolField(item.fields[mapping.visible]) : true,
   }));
 
   const DAY_MS = 24 * 60 * 60 * 1000;
 
   return mapped
     .filter((event): event is typeof event & { title: string } => Boolean(event.title))
+    .filter((event) => event.visible)
     .filter((event) => {
       // Without an end date, treat the event as still relevant for roughly
       // a day after it starts rather than keeping it forever (or cutting it
@@ -54,5 +58,6 @@ export function mapListItemsToEvents(
       if (!event.start) return true;
       return new Date(event.start).getTime() + DAY_MS >= Date.now();
     })
+    .map(({ visible, ...event }) => event)
     .sort((a, b) => (a.start ?? '').localeCompare(b.start ?? ''));
 }

@@ -15,6 +15,7 @@ export const columnMappingSchema = z.object({
   location: z.string(),
   description: z.string(),
   showDetails: z.string().default(''),
+  visible: z.string().default(''),
 });
 
 export const mediaItemSchema = z.object({

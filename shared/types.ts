@@ -81,6 +81,10 @@ export interface GraphColumnMapping {
   // Name of a Yes/No column controlling the detail-view rotation. Empty
   // means not configured (no events get a detail page).
   showDetails: string;
+  // Name of a Yes/No column controlling whether an event appears on the
+  // infoscreen at all. Empty means not configured (all events are shown,
+  // subject only to the date-based filtering).
+  visible: string;
 }
 
 export interface GraphSettingsPublic {

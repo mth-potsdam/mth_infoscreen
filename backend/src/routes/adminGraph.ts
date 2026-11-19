@@ -70,6 +70,7 @@ router.put(
       location,
       description,
       showDetails,
+      visible,
     } = req.body as {
       siteId?: string;
       siteName?: string;
@@ -81,6 +82,7 @@ router.put(
       location?: string;
       description?: string;
       showDetails?: string;
+      visible?: string;
     };
     if (!siteId || !listId || !title || !start) {
       res.status(400).json({ error: 'siteId, listId, title und start sind erforderlich' });
@@ -98,6 +100,7 @@ router.put(
         location: location ?? '',
         description: description ?? '',
         showDetails: showDetails ?? '',
+        visible: visible ?? '',
       };
       return cfg;
     });

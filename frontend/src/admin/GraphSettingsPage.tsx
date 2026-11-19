@@ -14,6 +14,7 @@ const MAPPING_FIELDS = [
   'end',
   'location',
   'description',
+  'visible',
   'showDetails',
 ] as const;
 type MappingField = (typeof MAPPING_FIELDS)[number];
@@ -24,6 +25,7 @@ const MAPPING_FIELD_LABELS: Record<MappingField, string> = {
   end: 'Ende',
   location: 'Ort',
   description: 'Beschreibung',
+  visible: 'Anzeige auf Infoscreen (Ja/Nein-Feld)',
   showDetails: 'Detailanzeige (Ja/Nein-Feld)',
 };
 
@@ -50,6 +52,7 @@ export default function GraphSettingsPage() {
     end: '',
     location: '',
     description: '',
+    visible: '',
     showDetails: '',
   });
 
@@ -140,6 +143,12 @@ export default function GraphSettingsPage() {
       {listId && columns.data && (
         <div className="admin-mapping">
           <h3>Spaltenzuordnung</h3>
+          <p className="admin-attribution">
+            Die "Anzeige auf Infoscreen" ist optional: Wird hier ein Ja/Nein-Feld ausgewählt,
+            werden nur Veranstaltungen mit dem Wert "Ja" überhaupt angezeigt — alle anderen
+            bleiben vollständig ausgeblendet. Ohne Auswahl werden alle Veranstaltungen gezeigt
+            (nur nach Datum gefiltert).
+          </p>
           <p className="admin-attribution">
             Die "Detailanzeige" ist optional: Wird hier ein Ja/Nein-Feld ausgewählt, blendet die
             Anzeige Veranstaltungen mit dem Wert "Ja" reihum als eigene Detailseite ein (Name,

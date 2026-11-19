@@ -191,6 +191,7 @@ export function useSaveGraphMapping() {
       location: string;
       description: string;
       showDetails: string;
+      visible: string;
     }) => api.put('/admin/graph/mapping', mapping),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'graph-settings'] }),
   });
