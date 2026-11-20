@@ -7,6 +7,16 @@ function stringField(value: unknown): string | null {
   return str.length > 0 ? str : null;
 }
 
+// A SharePoint "Hyperlink" column comes back from Graph as an
+// { Url, Description } object rather than a plain string — unwrap it so a
+// column of that type works the same as a single-line-of-text column.
+function urlField(value: unknown): string | null {
+  if (value && typeof value === 'object' && 'Url' in value) {
+    return stringField((value as { Url: unknown }).Url);
+  }
+  return stringField(value);
+}
+
 function dateField(value: unknown): string | null {
   if (!value) return null;
   const date = new Date(String(value));
@@ -39,7 +49,7 @@ export function mapListItemsToEvents(
     location: stringField(item.fields[mapping.location]),
     description: stringField(item.fields[mapping.description]),
     registrationLink: mapping.registrationLink
-      ? stringField(item.fields[mapping.registrationLink])
+      ? urlField(item.fields[mapping.registrationLink])
       : null,
     showDetails: mapping.showDetails ? boolField(item.fields[mapping.showDetails]) : false,
     // Unmapped means not configured — every event stays visible, matching

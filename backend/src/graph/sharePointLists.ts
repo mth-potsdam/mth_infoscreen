@@ -63,8 +63,13 @@ export async function listColumnsForList(siteId: string, listId: string): Promis
 
 export async function fetchListItems(siteId: string, listId: string): Promise<ListItemRecord[]> {
   const items: ListItemRecord[] = [];
+  // expand=fields alone only returns the columns in the list's default
+  // view — a column added after that view was last saved (as just
+  // happened with a newly created "Anmeldelink" column) silently comes
+  // back as undefined otherwise. select=* forces every column, matching
+  // what the column-mapping UI lets an admin choose from.
   let path: string | null =
-    `/sites/${encodeURIComponent(siteId)}/lists/${encodeURIComponent(listId)}/items?expand=fields&$top=200`;
+    `/sites/${encodeURIComponent(siteId)}/lists/${encodeURIComponent(listId)}/items?expand=fields(select=*)&$top=200`;
 
   while (path) {
     const data: { value: GraphListItemRaw[]; '@odata.nextLink'?: string } = await graphGet(path);
