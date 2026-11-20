@@ -133,4 +133,24 @@ router.put(
   })
 );
 
+router.get('/admin/settings/departures-max-per-stop', (_req, res) => {
+  res.json({ maxDeparturesPerStop: getConfig().transit.maxDeparturesPerStop });
+});
+
+router.put(
+  '/admin/settings/departures-max-per-stop',
+  asyncHandler(async (req, res) => {
+    const { count } = req.body as { count?: number };
+    if (!Number.isInteger(count) || (count as number) < 1 || (count as number) > 50) {
+      res.status(400).json({ error: 'count muss eine ganze Zahl zwischen 1 und 50 sein' });
+      return;
+    }
+    const next = await updateConfig((cfg) => {
+      cfg.transit.maxDeparturesPerStop = count as number;
+      return cfg;
+    });
+    res.json({ maxDeparturesPerStop: next.transit.maxDeparturesPerStop });
+  })
+);
+
 export default router;

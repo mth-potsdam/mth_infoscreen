@@ -146,6 +146,26 @@ export function useSaveDeparturesLookahead() {
   });
 }
 
+export function useDeparturesMaxPerStop() {
+  return useQuery({
+    queryKey: ['admin', 'departures-max-per-stop'],
+    queryFn: () =>
+      api.get<{ maxDeparturesPerStop: number }>('/admin/settings/departures-max-per-stop'),
+  });
+}
+
+export function useSaveDeparturesMaxPerStop() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (count: number) =>
+      api.put<{ maxDeparturesPerStop: number }>('/admin/settings/departures-max-per-stop', {
+        count,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin', 'departures-max-per-stop'] }),
+  });
+}
+
 export function useGraphSettings() {
   return useQuery({
     queryKey: ['admin', 'graph-settings'],

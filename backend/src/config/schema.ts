@@ -41,6 +41,7 @@ export const configSchema = z.object({
   transit: z.object({
     refreshIntervalSeconds: z.number().int().positive(),
     lookaheadMinutes: z.number().int().positive(),
+    maxDeparturesPerStop: z.number().int().positive().default(5),
     selectedStops: z.array(stopSchema),
   }),
   graph: z.object({
@@ -66,7 +67,12 @@ export const defaultConfig: AppConfig = {
   version: 1,
   admin: { passwordHash: null },
   facility: { address: '', lat: null, lon: null },
-  transit: { refreshIntervalSeconds: 60, lookaheadMinutes: 90, selectedStops: [] },
+  transit: {
+    refreshIntervalSeconds: 60,
+    lookaheadMinutes: 90,
+    maxDeparturesPerStop: 5,
+    selectedStops: [],
+  },
   graph: {
     siteId: null,
     siteName: null,

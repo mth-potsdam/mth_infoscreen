@@ -107,14 +107,33 @@ export async function refreshDepartures(): Promise<void> {
   }
 }
 
+// The admin-configured limit applies per displayed station group (i.e. per
+// stop name, since several platform IDs can share a name and are shown
+// together — see LocationStopsPage), not per individual platform ID.
+function limitPerStopName(departures: Departure[], maxPerStop: number): Departure[] {
+  const counts = new Map<string, number>();
+  const result: Departure[] = [];
+  for (const departure of departures) {
+    const count = counts.get(departure.stopName) ?? 0;
+    if (count >= maxPerStop) continue;
+    counts.set(departure.stopName, count + 1);
+    result.push(departure);
+  }
+  return result;
+}
+
 export function getDeparturesResponse(): DeparturesResponse {
-  const { selectedStops, refreshIntervalSeconds, lookaheadMinutes } = getConfig().transit;
+  const { selectedStops, refreshIntervalSeconds, lookaheadMinutes, maxDeparturesPerStop } =
+    getConfig().transit;
   const entries = selectedStops
     .map((stop) => cache.get(stop.id))
     .filter((e): e is StopCacheEntry => Boolean(e));
 
-  const departures = dedupeDepartures(
-    filterWithinLookahead(entries.flatMap((entry) => entry.departures), lookaheadMinutes)
+  const departures = limitPerStopName(
+    dedupeDepartures(
+      filterWithinLookahead(entries.flatMap((entry) => entry.departures), lookaheadMinutes)
+    ),
+    maxDeparturesPerStop
   );
 
   const staleStops = entries.filter((e) => e.stale).map((e) => e.stopName);
