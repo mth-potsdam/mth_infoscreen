@@ -269,9 +269,6 @@
 .event-detail__qr {
   width: clamp(80px, 10vw, 140px);
   height: clamp(80px, 10vw, 140px);
-  background: #fff;
-  padding: 6px;
-  border-radius: 8px;
   flex-shrink: 0;
 }
 

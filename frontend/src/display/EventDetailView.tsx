@@ -60,7 +60,12 @@ export default function EventDetailView({ event, position }: EventDetailViewProp
       {event.description && <p className="event-detail__description">{event.description}</p>}
       {event.registrationLink && (
         <div className="event-detail__registration">
-          <QRCodeSVG value={event.registrationLink} className="event-detail__qr" />
+          <QRCodeSVG
+            value={event.registrationLink}
+            className="event-detail__qr"
+            fgColor="#01504F"
+            bgColor="transparent"
+          />
           <span className="event-detail__registration-label">Zur Anmeldung scannen</span>
         </div>
       )}
