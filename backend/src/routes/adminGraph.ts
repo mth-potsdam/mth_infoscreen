@@ -69,6 +69,7 @@ router.put(
       end,
       location,
       description,
+      registrationLink,
       showDetails,
       visible,
     } = req.body as {
@@ -81,6 +82,7 @@ router.put(
       end?: string;
       location?: string;
       description?: string;
+      registrationLink?: string;
       showDetails?: string;
       visible?: string;
     };
@@ -99,6 +101,7 @@ router.put(
         end: end ?? '',
         location: location ?? '',
         description: description ?? '',
+        registrationLink: registrationLink ?? '',
         showDetails: showDetails ?? '',
         visible: visible ?? '',
       };

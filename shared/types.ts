@@ -47,6 +47,9 @@ export interface CalendarEvent {
   end: string | null;
   location: string | null;
   description: string | null;
+  // URL to the event's registration page, rendered as a QR code in the
+  // detail view. Null when unmapped or empty for this event.
+  registrationLink: string | null;
   // Whether this event should appear in the detail-view rotation, driven
   // by an admin-mapped Yes/No column on the Microsoft List.
   showDetails: boolean;
@@ -78,6 +81,9 @@ export interface GraphColumnMapping {
   end: string;
   location: string;
   description: string;
+  // Name of a column containing the event's registration link. Empty
+  // means not configured (no QR code is shown).
+  registrationLink: string;
   // Name of a Yes/No column controlling the detail-view rotation. Empty
   // means not configured (no events get a detail page).
   showDetails: string;

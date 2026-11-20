@@ -260,6 +260,26 @@
   white-space: pre-wrap;
 }
 
+.event-detail__registration {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.5vw, 24px);
+}
+
+.event-detail__qr {
+  width: clamp(80px, 10vw, 140px);
+  height: clamp(80px, 10vw, 140px);
+  background: #fff;
+  padding: 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.event-detail__registration-label {
+  font-size: clamp(1rem, 1.3vw, 1.4rem);
+  color: var(--mth-text-secondary);
+}
+
 @media (max-width: 900px) {
   .display-grid {
     grid-template-columns: 1fr;

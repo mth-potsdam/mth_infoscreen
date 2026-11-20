@@ -210,6 +210,7 @@ export function useSaveGraphMapping() {
       end: string;
       location: string;
       description: string;
+      registrationLink: string;
       showDetails: string;
       visible: string;
     }) => api.put('/admin/graph/mapping', mapping),

@@ -38,6 +38,9 @@ export function mapListItemsToEvents(
     end: dateField(item.fields[mapping.end]),
     location: stringField(item.fields[mapping.location]),
     description: stringField(item.fields[mapping.description]),
+    registrationLink: mapping.registrationLink
+      ? stringField(item.fields[mapping.registrationLink])
+      : null,
     showDetails: mapping.showDetails ? boolField(item.fields[mapping.showDetails]) : false,
     // Unmapped means not configured — every event stays visible, matching
     // behavior from before this field existed.

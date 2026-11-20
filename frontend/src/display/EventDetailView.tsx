@@ -1,3 +1,4 @@
+import { QRCodeSVG } from 'qrcode.react';
 import type { CalendarEvent } from '../../../shared/types';
 
 const TIME_ZONE = 'Europe/Berlin';
@@ -57,6 +58,12 @@ export default function EventDetailView({ event, position }: EventDetailViewProp
       {dateRange && <p className="event-detail__date">{dateRange}</p>}
       {event.location && <p className="event-detail__location">{event.location}</p>}
       {event.description && <p className="event-detail__description">{event.description}</p>}
+      {event.registrationLink && (
+        <div className="event-detail__registration">
+          <QRCodeSVG value={event.registrationLink} className="event-detail__qr" />
+          <span className="event-detail__registration-label">Zur Anmeldung scannen</span>
+        </div>
+      )}
     </div>
   );
 }

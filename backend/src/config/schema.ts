@@ -14,6 +14,7 @@ export const columnMappingSchema = z.object({
   end: z.string(),
   location: z.string(),
   description: z.string(),
+  registrationLink: z.string().default(''),
   showDetails: z.string().default(''),
   visible: z.string().default(''),
 });

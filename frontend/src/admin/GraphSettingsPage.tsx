@@ -14,6 +14,7 @@ const MAPPING_FIELDS = [
   'end',
   'location',
   'description',
+  'registrationLink',
   'visible',
   'showDetails',
 ] as const;
@@ -25,6 +26,7 @@ const MAPPING_FIELD_LABELS: Record<MappingField, string> = {
   end: 'Ende',
   location: 'Ort',
   description: 'Beschreibung',
+  registrationLink: 'Anmeldelink (URL-Feld)',
   visible: 'Anzeige auf Infoscreen (Ja/Nein-Feld)',
   showDetails: 'Detailanzeige (Ja/Nein-Feld)',
 };
@@ -52,6 +54,7 @@ export default function GraphSettingsPage() {
     end: '',
     location: '',
     description: '',
+    registrationLink: '',
     visible: '',
     showDetails: '',
   });
@@ -143,6 +146,11 @@ export default function GraphSettingsPage() {
       {listId && columns.data && (
         <div className="admin-mapping">
           <h3>Spaltenzuordnung</h3>
+          <p className="admin-attribution">
+            Der "Anmeldelink" ist optional: Wird hier eine Spalte mit einer URL ausgewählt, zeigt die
+            Detailanzeige zusätzlich einen QR-Code zu dieser Adresse. Ohne Auswahl bzw. bei leerem
+            Feld wird kein QR-Code angezeigt.
+          </p>
           <p className="admin-attribution">
             Die "Anzeige auf Infoscreen" ist optional: Wird hier ein Ja/Nein-Feld ausgewählt,
             werden nur Veranstaltungen mit dem Wert "Ja" überhaupt angezeigt — alle anderen
