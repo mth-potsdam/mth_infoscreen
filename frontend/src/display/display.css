@@ -146,10 +146,24 @@
   text-align: center;
 }
 
-.departure-row__stop {
-  display: block;
+.departure-group {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.departure-group__header {
+  flex-shrink: 0;
+  font-size: clamp(0.85rem, 1.1vw, 1.2rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--mth-text-secondary);
-  font-size: 0.6em;
+  padding-top: clamp(6px, 0.8vh, 12px);
+}
+
+.departure-group__header:first-child {
+  padding-top: 0;
 }
 
 .departure-row__time {

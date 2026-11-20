@@ -48,10 +48,7 @@ export default function DepartureRow({ departure }: { departure: Departure }) {
       >
         {departure.line}
       </span>
-      <span className="departure-row__direction">
-        {departure.direction}
-        <span className="departure-row__stop">{departure.stopName}</span>
-      </span>
+      <span className="departure-row__direction">{departure.direction}</span>
       <span className="departure-row__time">
         {formatTime(departure.when)}
         {delayMinutes > 0 && <span className="departure-row__delay">+{delayMinutes}</span>}

@@ -1,13 +1,35 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import type { Departure } from '../../../shared/types';
 import { useDepartures } from '../api/queries';
 import DepartureRow from './DepartureRow';
 import StaleBadge from './StaleBadge';
 import { useAutoScroll } from './useAutoScroll';
 
+function groupByStation(departures: Departure[]): { stopName: string; departures: Departure[] }[] {
+  const groups: { stopName: string; departures: Departure[] }[] = [];
+  const groupByName = new Map<string, Departure[]>();
+
+  for (const departure of departures) {
+    let group = groupByName.get(departure.stopName);
+    if (!group) {
+      group = [];
+      groupByName.set(departure.stopName, group);
+      groups.push({ stopName: departure.stopName, departures: group });
+    }
+    group.push(departure);
+  }
+
+  return groups;
+}
+
 export default function DeparturesPanel() {
   const { data, isLoading, isError, error } = useDepartures();
   const bodyRef = useRef<HTMLDivElement>(null);
   useAutoScroll(bodyRef, data?.departures.length);
+  const groups = useMemo(
+    () => (data ? groupByStation(data.departures) : []),
+    [data]
+  );
 
   return (
     <section className="panel panel--departures">
@@ -25,11 +47,16 @@ export default function DeparturesPanel() {
         {data && data.departures.length === 0 && (
           <p className="panel__empty">Keine bevorstehenden Abfahrten</p>
         )}
-        {data?.departures.map((departure, index) => (
-          <DepartureRow
-            key={`${departure.stopId}-${departure.line}-${departure.when}-${index}`}
-            departure={departure}
-          />
+        {groups.map((group) => (
+          <div key={group.stopName} className="departure-group">
+            <h3 className="departure-group__header">{group.stopName}</h3>
+            {group.departures.map((departure, index) => (
+              <DepartureRow
+                key={`${departure.stopId}-${departure.line}-${departure.when}-${index}`}
+                departure={departure}
+              />
+            ))}
+          </div>
         ))}
       </div>
       <p className="panel__attribution">
